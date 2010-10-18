@@ -1,13 +1,4 @@
-#################################################################
-# Main makefile
-# Type "make help" for usage
-#
-# To compile (optimized) and install static and shared library
-# with each avaible compilers, type:
-# for c in pgi intel gcc 'sun studio12'; do make c $c optimized static shared install; done
-#################################################################
-
-# Pseudo-Random Number Generator library (PRNG)
+# Timing template library
 
 # Project options
 LIB             := timing
@@ -20,10 +11,6 @@ LANGUAGE         = CPP
 
 # Include the generic rules
 include makefiles/Makefile.rules
-
-### Floats type: Use single precision or double precision?
-### By default, it's double precision.
-CFLAGS          += -DFLOATTYPE_SINGLE
 
 #################################################################
 # Project specific options
@@ -41,29 +28,7 @@ test:
 ### Just build "full" and install
 .PHONY: f
 f:
-	$(MAKE) shared static install $(filter-out f, $(MAKECMDGOALS) )
-
-.PHONY: shared lib_shared
-shared: lib_shared
-lib_shared: $(build_dir)/lib$(LIB).so
-$(build_dir)/lib$(LIB).so: $(LIB_OBJ)
-	############################################################
-	######## Building shared library... ########################
-	#
-	$(LD) $(LIB_OPTIONS) -o $(build_dir)/lib$(LIB).so $(LIB_OBJ)
-	######## Done ##############################################
-
-.PHONY: static lib_static
-static: lib_static
-lib_static: $(build_dir)/lib$(LIB).a
-$(build_dir)/lib$(LIB).a: $(LIB_OBJ)
-	############################################################
-	######## Building static library... ########################
-	#
-	ar rc $(build_dir)/lib$(LIB).a $(LIB_OBJ)
-	######## Done ##############################################
-#   ranlib $(build_dir)/lib$(LIB).a
-
+	$(MAKE) install $(filter-out f, $(MAKECMDGOALS) )
 
 ### Install #####################################################
 INSTALL          = $(GNU)install -m644 -D
@@ -100,40 +65,16 @@ else
     DESTDIR_LIB := $(DESTDIR)/lib/$(DESTDIRCOMPILER)
 endif
 
-HEADERS_NOTESTING=$(filter-out src/FloatType.hpp, $(filter-out $(wildcard testing/*.$(HEADEXT)), $(HEADERS) ) )
+HEADERS_NOTESTING=$(filter-out $(wildcard testing/*.$(HEADEXT)), $(HEADERS) )
 HEADERS_NOTESTING_NOSRC=$(subst src/,,$(HEADERS_NOTESTING) )
 INSTALLED_HEADERS=$(addprefix $(DESTDIR)/include/, $(HEADERS_NOTESTING_NOSRC) )
 ###############################################################
 
 
-### Install only the build (static,shared) stated as target
+### Install only headers
 TO_INSTALL       = install_headers
-ifeq ($(filter shared, $(MAKECMDGOALS)), shared)
-TO_INSTALL      += install_shared
-endif
-ifeq ($(filter static, $(MAKECMDGOALS)), static)
-TO_INSTALL      += install_static
-endif
 .PHONY: install
 install: $(TO_INSTALL)
-
-.PHONY: install_static
-install_static: $(DESTDIR_LIB)/lib$(LIB).a install_create_folders
-$(DESTDIR_LIB)/lib$(LIB).a: $(build_dir)/lib$(LIB).a
-	############################################################
-	######## Installing static library to $(DESTDIR_LIB)... ####
-	$(SUDO) $(INSTALL) $< $@
-	############################################################
-	######## Done ##############################################
-
-.PHONY: install_shared
-install_shared: $(DESTDIR_LIB)/lib$(LIB).so install_create_folders
-$(DESTDIR_LIB)/lib$(LIB).so: $(build_dir)/lib$(LIB).so
-	############################################################
-	######## Installing shared library to $(DESTDIR_LIB)... ####
-	$(SUDO) $(INSTALL_EXEC) $< $@
-	############################################################
-	######## Done ##############################################
 
 .PHONY: install_headers install_headers_print install_headers_print_done
 ifeq ($(wildcard $(INSTALLED_HEADERS)),)
@@ -159,8 +100,6 @@ endif
 .PHONY: uninstall
 uninstall: force
 	############################################################
-	######## Removing library from $(DESTDIR_LIB)... ###
-	$(SUDO) $(RM) $(DESTDIR_LIB)/lib$(LIB)*
 	######## Removing library headers from $(DESTDIR_INC)... ###
 	$(SUDO) $(RM) -r $(INSTALLED_HEADERS)
 
