@@ -3,8 +3,6 @@
 #include <iostream>
 #include <cmath>
 
-#include <StdCout.hpp>
-
 #include "Timing.hpp"
 
 // Timing global variable
