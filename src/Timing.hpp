@@ -4,7 +4,13 @@
 #include <map>
 #include <string>
 
-#include <FloatType.hpp>
+#ifdef FLOATTYPE_SINGLE
+typedef float  fdouble;
+const char floatingpoint_type[] = "float";
+#else
+typedef double fdouble;
+const char floatingpoint_type[] = "double";
+#endif
 
 #include <sys/time.h>
 typedef timeval Timeval;
