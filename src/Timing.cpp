@@ -73,18 +73,13 @@ void Timing::Reset_Duration()
 // **************************************************************
 void Timing::Reset_Timer()
 {
-#ifdef CALCULATE_TIMING
     gettimeofday(&time_info, 0);
-#else  // #ifdef CALCULATE_TIMING
-    time_info = 0.0;
-#endif // #ifdef CALCULATE_TIMING
 }
 
 // **************************************************************
 fdouble Timing::Get_Elapsed_Time()
 {
     fdouble sec = 0.0;
-#ifdef CALCULATE_TIMING
     timeval now;
     gettimeofday(&now, 0);
     const time_t now_sec  = now.tv_sec;
@@ -95,7 +90,6 @@ fdouble Timing::Get_Elapsed_Time()
     // To prevent overflow when used with floats, do the subtraction
     // separatly for the seconds and the microseconds
     sec = fdouble(now_sec - pre_sec) + (fdouble(now_usec - pre_usec) / fdouble(1.0e6));
-#endif // #ifdef CALCULATE_TIMING
     return sec;
 }
 

@@ -6,12 +6,8 @@
 
 #include <FloatType.hpp>
 
-#ifdef CALCULATE_TIMING
 #include <sys/time.h>
 typedef timeval Timeval;
-#else  // #ifdef CALCULATE_TIMING
-typedef fdouble  Timeval;
-#endif // #ifdef CALCULATE_TIMING
 
 class Timing
 {
