@@ -19,10 +19,10 @@ class Timing
                 Timing();
         void    Reset_Duration();
         void    Reset_Timer();
-        fdouble  Get_Elapsed_Time();
+        fdouble Get_Elapsed_Time();
         void    Update_Duration();
         void    Update_Duration(fdouble elapsed_sec);
-        fdouble  Get_Duration();
+        fdouble Get_Duration();
 };
 
 // Timing global variable
