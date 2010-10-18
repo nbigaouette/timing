@@ -21,6 +21,7 @@ class Timing
         void    Reset_Timer();
         fdouble  Get_Elapsed_Time();
         void    Update_Duration();
+        void    Update_Duration(fdouble elapsed_sec);
         fdouble  Get_Duration();
 };
 

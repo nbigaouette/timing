@@ -100,6 +100,12 @@ void Timing::Update_Duration()
 }
 
 // **************************************************************
+void Timing::Update_Duration(fdouble elapsed_sec)
+{
+    duration += elapsed_sec;
+}
+
+// **************************************************************
 fdouble Timing::Get_Duration()
 {
     return duration;
