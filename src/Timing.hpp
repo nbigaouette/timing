@@ -15,8 +15,9 @@ template <class Double>
 class Timing
 {
     private:
-        Timeval time_info;  // Time information
-        Double  duration;   // Duration in seconds
+        Timeval time_info;      // Time information
+        Double  duration_sec;   // Duration [seconds]
+        Double  duration_usec;  // Duration [microseconds]
 
     public:
         // ******************************************************
@@ -28,7 +29,8 @@ class Timing
         // ******************************************************
         void Reset_Duration()
         {
-            duration = Double(0.0);
+            duration_sec  = Double(0.0);
+            duration_usec = Double(0.0);
             Reset_Timer();
         }
 
@@ -39,7 +41,7 @@ class Timing
         }
 
         // ******************************************************
-        Double Get_Elapsed_Time()
+        void Get_Elapsed_Time(Double &_duration_sec, Double &_duration_usec)
         {
             // Update current time information
             timeval now;
@@ -56,27 +58,30 @@ class Timing
 
             // To prevent overflow when used with floats, do the subtraction
             // separately for the seconds and the microseconds
-            const Double sec = Double(now_sec - pre_sec) + (Double(now_usec - pre_usec) / Double(1.0e6));
-
-            return sec;
+            _duration_sec  = Double(now_sec  - pre_sec);
+            _duration_usec = Double(now_usec - pre_usec);
         }
 
         // ******************************************************
         void Update_Duration()
         {
-            duration += Get_Elapsed_Time();
+            const Double old_duration_sec  = duration_sec;
+            const Double old_duration_usec = duration_usec;
+            Get_Elapsed_Time(duration_sec, duration_usec);
+            duration_sec  += old_duration_sec;
+            duration_usec += old_duration_usec;
         }
 
         // ******************************************************
         void Update_Duration(Double elapsed_sec)
         {
-            duration += elapsed_sec;
+            duration_sec += elapsed_sec;
         }
 
         // ******************************************************
         Double Get_Duration()
         {
-            return duration;
+            return (duration_sec + duration_usec*Double(1.0e-6));
         }
 };
 
