@@ -83,6 +83,14 @@ class Timing
         {
             return (duration_sec + duration_usec*Double(1.0e-6));
         }
+
+        // ******************************************************
+        Double Calculate_Duration()
+        {
+            Timeval now;
+            gettimeofday(&now, 0);
+            return (Double(now.tv_sec - time_info.tv_sec) + Double(now.tv_usec - time_info.tv_usec)*Double(1.0e-6));
+        }
 };
 
 // Timing global variable
