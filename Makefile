@@ -15,6 +15,8 @@ include makefiles/Makefile.rules
 #################################################################
 # Project specific options
 
+$(eval $(call Flags_template,stdcout,StdCout.hpp,ssh://optimusprime.selfip.net/git/nicolas/stdcout.git))
+
 LIB_OBJ          = $(OBJ)
 
 test:

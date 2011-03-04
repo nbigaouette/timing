@@ -8,9 +8,12 @@
 #include <iostream>
 #include <cmath>
 #include <sstream>
+#include <stdint.h> // (u)int64_t
 
 #include <sys/time.h>
 typedef timeval Timeval;
+
+#include <StdCout.hpp>
 
 template <class Double>
 class Timing
@@ -190,6 +193,38 @@ inline std::string Format_Seconds_Human_Readable(const double s)
 
     return s_string;
 }
+
+// **************************************************************
+inline void Print_Timing_Info(const uint64_t nt)
+{
+    const std::string s("                   ");
+    std_cout
+        << s << "nt = " << nt << "\n"
+        << s << "_______________________________________________________________________\n"
+        << s << "|                  Timing of different code aspects                   |\n"
+        << s << "|---------------------------------------------------------------------|\n"
+        << s << "|       Code Aspect         |          Duration          | Percentage |\n"
+        << s << "|                           |  seconds   | per time step | over total |\n"
+        << s << "|---------------------------|------------|---------------|------------|\n";
+    for (std::map<std::string, Timing<double> >::iterator it = Timings.begin() ; it != Timings.end(); it++ )
+    {
+        if (it->first != "total")
+        {
+            std_cout << s << "| ";
+                std_cout.Format(25, 0, 's', 'l'); std_cout << it->first << " | ";
+                std_cout.Format(10, 5, 'g'); std_cout << Timings[it->first].Get_Duration() << " | ";
+                std_cout.Format(13, 6, 'g'); std_cout << Timings[it->first].Get_Duration() / double(nt) << " | ";
+                std_cout.Format(10, 2, 'f'); std_cout << (Timings[it->first].Get_Duration() / Timings["total"].Get_Duration())*100.0 << " |\n";
+        }
+    }
+    std_cout
+        << s << "|---------------------------|-----------------------------------------|\n"
+        << s << "| Total (human readable):   | ";
+            std_cout.Format(39, 0, 's'); std_cout << Format_Seconds_Human_Readable(Timings["total"].Get_Duration()) << " |\n"
+        << s << "|---------------------------------------------------------------------|\n"
+        << "\n";
+}
+
 
 #endif // #ifndef _INC_TIMING_hpp
 
