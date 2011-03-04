@@ -51,6 +51,8 @@ class Timing
         // ******************************************************
         void Get_Elapsed_Time(Double &_duration_sec, Double &_duration_usec)
         {
+            assert(is_initialized);
+
             // Update current time information
             timeval now;
             gettimeofday(&now, 0);
@@ -85,6 +87,8 @@ class Timing
         // ******************************************************
         void Update_Duration(Double elapsed_sec)
         {
+            assert(is_initialized);
+
             duration_sec += elapsed_sec;
         }
 
@@ -97,6 +101,8 @@ class Timing
         // ******************************************************
         Double Calculate_Duration()
         {
+            assert(is_initialized);
+
             Timeval now;
             gettimeofday(&now, 0);
             return (Double(now.tv_sec - time_info.tv_sec) + Double(now.tv_usec - time_info.tv_usec)*Double(1.0e-6));
