@@ -259,6 +259,16 @@ inline void Print_Timing_Info(const uint64_t nt)
             std_cout.Format(39, 0, 's'); std_cout << Format_Seconds_Human_Readable(Timings[total_key].Get_Duration()) << " |\n"
         << s << "|---------------------------------------------------------------------|\n"
         << "\n";
+
+
+    time_t rawtime;
+    time(&rawtime);
+    const int max_string_size = 1000;
+    char date_out[max_string_size];      // Output string
+    struct tm *date_format; // Saves in Date format
+    date_format = localtime(&rawtime);
+    strftime(date_out, max_string_size, "%A, %B %dth %Y, %Hh%M:%S (%Y%m%d%H%M%S)", date_format);
+    std_cout << "\nEnding time and date:\n    " << date_out << std::endl << std::endl;
 }
 
 
