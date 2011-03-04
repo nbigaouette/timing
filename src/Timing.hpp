@@ -19,15 +19,16 @@ template <class Double>
 class Timing
 {
     private:
+        bool    is_initialized;
         Timeval time_info;      // Time information
         Double  duration_sec;   // Duration [seconds]
         Double  duration_usec;  // Duration [microseconds]
 
     public:
         // ******************************************************
-        Timing(){
-            Reset_Timer();
-            Reset_Duration();
+        Timing()
+        {
+            is_initialized = false;
         }
 
         // ******************************************************
@@ -41,6 +42,7 @@ class Timing
         // ******************************************************
         void Reset_Timer()
         {
+            is_initialized = true;
             gettimeofday(&time_info, 0);
         }
 
@@ -69,6 +71,8 @@ class Timing
         // ******************************************************
         void Update_Duration()
         {
+            assert(is_initialized);
+
             const Double old_duration_sec  = duration_sec;
             const Double old_duration_usec = duration_usec;
             Get_Elapsed_Time(duration_sec, duration_usec);
