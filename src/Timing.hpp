@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <iostream>
 #include <cmath>
+#include <sstream>
 
 #include <sys/time.h>
 typedef timeval Timeval;
@@ -156,8 +157,10 @@ inline std::string Timing_IntToStr(const Integer integer, const int width = 0, c
     std::ostringstream MyStream;
     if (width != 0)
     {
-        MyStream << std::setw(width);
-        MyStream << std::setfill(fill);
+        //MyStream << std::setw(width);
+        //MyStream << std::setfill(fill);
+        MyStream.width(width);
+        MyStream.fill(fill);
     }
     MyStream << integer << std::flush;
     return (MyStream.str());
