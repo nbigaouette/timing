@@ -29,6 +29,8 @@ class Timing
         Timing()
         {
             is_initialized = false;
+            duration_sec   = Double(0.0);
+            duration_usec  = Double(0.0);
         }
 
         // ******************************************************
