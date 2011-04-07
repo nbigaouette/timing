@@ -207,13 +207,14 @@ inline std::string Format_Seconds_Human_Readable(const double s)
 }
 
 // **************************************************************
-inline void Print_Timing_Info(const uint64_t nt)
+template <class Double>
+void Print_Timing_Info(const Double nt)
 {
     const std::string s("                   ");
     bool total_found = false;
     std::string total_key;
 
-    for (std::map<std::string, Timing<double> >::iterator it = Timings.begin() ; it != Timings.end(); it++ )
+    for (typename std::map<std::string, Timing<Double> >::iterator it = Timings.begin() ; it != Timings.end(); it++ )
     {
         if (it->first == "Total" || it->first == "total")
         {
@@ -229,14 +230,14 @@ inline void Print_Timing_Info(const uint64_t nt)
         << s << "|       Code Aspect         |          Duration          | Percentage |\n"
         << s << "|                           |  seconds   | per time step | over total |\n"
         << s << "|---------------------------|------------|---------------|------------|\n";
-    for (std::map<std::string, Timing<double> >::iterator it = Timings.begin() ; it != Timings.end(); it++ )
+    for (typename std::map<std::string, Timing<Double> >::iterator it = Timings.begin() ; it != Timings.end(); it++ )
     {
         if (it->first != total_key)
         {
             std_cout << s << "| ";
                 std_cout.Format(25, 0, 's', 'l'); std_cout << it->first << " | ";
                 std_cout.Format(10, 5, 'g'); std_cout << Timings[it->first].Get_Duration() << " | ";
-                std_cout.Format(13, 6, 'g'); std_cout << Timings[it->first].Get_Duration() / double(nt) << " | ";
+                std_cout.Format(13, 6, 'g'); std_cout << Timings[it->first].Get_Duration() / nt << " | ";
                 if (total_found)
                 {
                     std_cout.Format(10, 2, 'f'); std_cout << (Timings[it->first].Get_Duration() / Timings[total_key].Get_Duration())*100.0 << " |\n";
@@ -250,7 +251,7 @@ inline void Print_Timing_Info(const uint64_t nt)
         std_cout << s << "| ";
             std_cout.Format(25, 0, 's', 'l'); std_cout << total_key << " | ";
             std_cout.Format(10, 5, 'g'); std_cout << Timings[total_key].Get_Duration() << " | ";
-            std_cout.Format(13, 6, 'g'); std_cout << Timings[total_key].Get_Duration() / double(nt) << " | ";
+            std_cout.Format(13, 6, 'g'); std_cout << Timings[total_key].Get_Duration() / nt << " | ";
             std_cout.Format(10, 2, 'f'); std_cout << (Timings[total_key].Get_Duration() / Timings[total_key].Get_Duration())*100.0 << " |\n";
     }
     std_cout
