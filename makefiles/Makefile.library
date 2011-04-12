@@ -68,7 +68,7 @@ INSTALL_EXEC := $(subst -D,,$(INSTALL_EXEC) )
 endif
 
 ### Add compiler to library directory, but only if not GCC
-DESTDIR_INC      = $(DESTDIR)/include/$(LIB)
+DESTDIR_INC      = $(DESTDIR)/include
 ifeq ($(DESTDIRCOMPILER),gcc)
 DESTDIR_LIB      = $(DESTDIR)/lib
 else
@@ -78,7 +78,7 @@ endif
 HEADERS_NOTESTING=$(filter-out src/Version.hpp, $(filter-out $(wildcard testing/*.$(HEADEXT)), $(HEADERS) ) )
 HEADERS_NOTESTING_NOSRC=$(subst src/,,$(HEADERS_NOTESTING) )
 HEADERS_NOTESTING_NOSRC_NOMEM=$(filter-out Constants.hpp, $(HEADERS_NOTESTING_NOSRC) )
-INSTALLED_HEADERS=$(addprefix $(DESTDIR)/include/$(LIB)/, $(HEADERS_NOTESTING_NOSRC_NOMEM) )
+INSTALLED_HEADERS=$(addprefix $(DESTDIR)/include/, $(HEADERS_NOTESTING_NOSRC_NOMEM) )
 ###############################################################
 
 
@@ -93,8 +93,8 @@ endif
 .PHONY: install
 install: $(TO_INSTALL)
 
-$(DESTDIR)/include/$(LIB):
-	mkdir -p $(DESTDIR)/include/$(LIB)
+$(DESTDIR)/include:
+	mkdir -p $(DESTDIR)/include
 $(DESTDIR_LIB):
 	mkdir -p $(DESTDIR_LIB)
 
@@ -118,7 +118,7 @@ $(DESTDIR_LIB)/lib$(LIB).so: $(build_dir)/lib$(LIB).so $(DESTDIR_LIB)
 
 .PHONY: install_headers install_headers_print install_headers_print_done
 ifeq ($(wildcard $(INSTALLED_HEADERS)),)
-install_headers_print: $(DESTDIR)/include/$(LIB)
+install_headers_print: $(DESTDIR)/include
 	############################################################
 	######## Installing library headers to $(DESTDIR_INC)... ###
 install_headers_print_done:
@@ -129,7 +129,7 @@ install_headers_print:
 install_headers_print_done:
 endif
 install_headers: install_headers_print $(INSTALLED_HEADERS) install_headers_print_done
-$(DESTDIR)/include/$(LIB)/%.$(HEADEXT): src/%.$(HEADEXT) $(DESTDIR)/include
+$(DESTDIR)/include/%.$(HEADEXT): src/%.$(HEADEXT) $(DESTDIR)/include
 	$(SUDO) $(INSTALL) $< $@
 
 .PHONY: uninstall
