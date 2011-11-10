@@ -264,11 +264,11 @@ void Print_Timing_Info(const Double nt)
 
     time_t rawtime;
     time(&rawtime);
-    const int max_string_size = 1000;
-    char date_out[max_string_size];      // Output string
+    const int timing_max_string_size = 1000;
+    char date_out[timing_max_string_size];      // Output string
     struct tm *date_format; // Saves in Date format
     date_format = localtime(&rawtime);
-    strftime(date_out, max_string_size, "%A, %B %dth %Y, %Hh%M:%S (%Y%m%d%H%M%S)", date_format);
+    strftime(date_out, timing_max_string_size, "%A, %B %dth %Y, %Hh%M:%S (%Y%m%d%H%M%S)", date_format);
     std_cout << "\nEnding time and date:\n    " << date_out << std::endl << std::endl;
 }
 
