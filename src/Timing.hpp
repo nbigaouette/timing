@@ -15,6 +15,11 @@ typedef timeval Timeval;
 
 #include <StdCout.hpp>
 
+
+namespace TimingNamespace
+{
+}
+
 template <class Double>
 class Timing
 {
