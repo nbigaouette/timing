@@ -4,7 +4,8 @@ A simple C++ template library for timing calculation.
 # Compilation
 Requirements: [https://github.com/nbigaouette/stdcout](stdcout).
 
-To install:
+It's just a simple header file. Either copy it to alongside the rest of the code,
+or install it using:
 
 ``` bash
 $ make install
