@@ -30,12 +30,12 @@ $ make install DESTIR=/usr
 
 Notes:
 
-* Because of Print_Timing_Info() prints all its members, the map needs to have a
+* Because of `Print_Timing_Info()` prints all its members, the map needs to have a
 the specific name "Timings".
 * A timing object "Total" must be present. This is to calculate the ration of all
 different timings.
 * Since the templated library can be specialized to floats or doubles, the
-function Print_Timing_Info() needs to know which one to use. It will thus require
+function `Print_Timing_Info()` needs to know which one to use. It will thus require
 an argument of the same type as what was specified when the map is declared. Even
 though the argument is a float or a double, its value is an integer that represents
 the total number of time steps used in the measured calculation. This allows
