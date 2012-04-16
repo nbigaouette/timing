@@ -154,6 +154,16 @@ class Timing
             return Double(Get_Duration_Seconds() + TenToNine*Get_Duration_NanoSeconds());
         }
 
+        // ******************************************************
+        Double Calculate_Duration()
+        {
+            assert(is_initialized);
+
+            Timer now;
+            now.Get_Current_Time();
+            duration = now - start;
+            return Get_Duration();
+        }
 };
 
 
