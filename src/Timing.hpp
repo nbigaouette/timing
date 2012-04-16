@@ -3,12 +3,11 @@
 
 #include <map>
 #include <string>
-
 #include <cstdio>
 #include <iostream>
 #include <cmath>
 #include <sstream>
-#include <stdint.h> // (u)int64_t
+#include <cassert>
 
 #include <time.h>
 
