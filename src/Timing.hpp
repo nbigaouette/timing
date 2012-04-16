@@ -210,6 +210,15 @@ inline std::string Format_Seconds_Human_Readable(const double s)
     return s_string;
 }
 
+// **************************************************************
+template <class Double>
+void Print_Timing_Info(const Double nt)
+{
+    const std::string s("                   ");
+    bool total_found = false;
+    std::string total_key;
+
+}
 
 
 #endif // #ifndef _INC_TIMING_hpp
