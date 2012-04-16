@@ -91,16 +91,23 @@ class Timing
 {
     private:
         bool    is_initialized;
+        Timer start;
+        Timer end;
+        Timer duration;
 
     public:
         // ******************************************************
         Timing()
         {
+            is_initialized  = false;
         }
 
         // ******************************************************
         void Reset_Duration()
         {
+            start.Clear();
+            end.Clear();
+            duration.Clear();
             Reset_Timer();
         }
 
@@ -108,25 +115,43 @@ class Timing
         void Reset_Timer()
         {
             is_initialized = true;
+            start.Get_Current_Time();
         }
 
         // ******************************************************
+        void Update_Duration()
         {
             assert(is_initialized);
 
+            end.Get_Current_Time();
+            duration += (end - start);
         }
 
         // ******************************************************
+        time_t Get_Duration_Seconds()
+        /**
+         * Returns timer's elapsed duration in seconds (integer representation).
+         */
         {
+            return duration.Get_sec();
         }
 
         // ******************************************************
+        long Get_Duration_NanoSeconds()
+        /**
+         * Returns timer's elapsed duration in nanoseconds (integer representation).
+         */
         {
+            return duration.Get_nsec();
         }
 
         // ******************************************************
         Double Get_Duration()
+        /**
+         * Returns timer's elapsed duration in seconds (float representation).
+         */
         {
+            return Double(Get_Duration_Seconds() + Get_Duration_NanoSeconds());
         }
 
 };
