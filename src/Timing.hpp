@@ -255,7 +255,7 @@ class Timing
          * Return the duration in human readable format
          */
         {
-            const uint64_t years    = Duration_Years();
+            //const uint64_t years    = Duration_Years();
             const uint64_t days     = Duration_Days();
             const uint64_t hours    = Duration_Hours();
             const uint64_t minutes  = Duration_Hours();
