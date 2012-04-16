@@ -274,6 +274,12 @@ class Timing
         }
 };
 
+// Timing global variable
+#ifdef FLOATTYPE_SINGLE
+extern std::map<std::string, Timing<float> >  Timings;
+#else  // #ifdef FLOATTYPE_SINGLE
+extern std::map<std::string, Timing<double> > Timings;
+#endif // #ifdef FLOATTYPE_SINGLE
 
 namespace TimingNamespace
 {
