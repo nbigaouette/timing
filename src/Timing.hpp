@@ -33,28 +33,14 @@ const uint64_t days_to_sec      = days_to_hours * hours_to_min * min_to_sec;
 
 const uint64_t hours_to_sec     = hours_to_min * min_to_sec;
 
+// Forward declaration
 namespace TimingNamespace
 {
     template <class Double>
-    void Wait(const Double duration_sec)
-    {
-    }
+    void Wait(const Double duration_sec);
 
-    // **************************************************************
     template <class Integer>
-    inline std::string IntToStr(const Integer integer, const int width = 0, const char fill = ' ')
-    {
-        std::ostringstream MyStream;
-        if (width != 0)
-        {
-            //MyStream << std::setw(width);
-            //MyStream << std::setfill(fill);
-            MyStream.width(width);
-            MyStream.fill(fill);
-        }
-        MyStream << integer << std::flush;
-        return (MyStream.str());
-    }
+    std::string IntToStr(const Integer integer, const int width = 0, const char fill = ' ');
 }
 
 class Timer
@@ -282,6 +268,41 @@ class Timing
         }
 
 };
+
+
+namespace TimingNamespace
+{
+    template <class Double>
+    void Wait(const Double duration_sec)
+    {
+        Double delay = 0.0;
+//         timeval initial, now;
+//         gettimeofday(&initial, NULL);
+//         while (delay <= duration_sec)
+//         {
+//             gettimeofday(&now, NULL);
+//             // Transform time into double delay
+//             delay = double(now.tv_sec - initial.tv_sec) + 1.0e-6*double(now.tv_usec - initial.tv_usec);
+//             //printf("Delay = %.6f   max = %.6f\n", delay, duration_sec);
+//         }
+    }
+
+    // **************************************************************
+    template <class Integer>
+    inline std::string IntToStr(const Integer integer, const int width = 0, const char fill = ' ')
+    {
+        std::ostringstream MyStream;
+        if (width != 0)
+        {
+            //MyStream << std::setw(width);
+            //MyStream << std::setfill(fill);
+            MyStream.width(width);
+            MyStream.fill(fill);
+        }
+        MyStream << integer << std::flush;
+        return (MyStream.str());
+    }
+}
 
 
 // **************************************************************
