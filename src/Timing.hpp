@@ -18,6 +18,11 @@
 #define log printf
 #endif // #ifndef log
 
+// Forward declaration
+class Timing;
+// Timing global variable
+extern std::map<std::string, Timing> Timings;
+
 // **************************************************************
 namespace timing
 {
@@ -94,9 +99,6 @@ class Timing
         uint64_t Duration_Seconds();
         std::string Duration_Human_Readable();
 };
-
-// Timing global variable
-extern std::map<std::string, Timing> Timings;
 
 namespace timing
 {
