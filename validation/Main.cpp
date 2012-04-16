@@ -67,6 +67,10 @@ int main(int argc, char *argv[])
         itemp += itemp;
     Timings["Test1"].Update_Duration();
 
+    Timings["Wait"].Reset_Timer();
+    TimingNamespace::Wait(2.0);
+    Timings["Wait"].Update_Duration();
+
     Timings["Total"].Update_Duration();
 
     Print_Timing_Info(double(N));
