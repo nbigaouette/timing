@@ -258,33 +258,31 @@ class Timing
             return uint64_t(std::floor(remaining_seconds));
         }
 
+        std::string Duration_Human_Readable()
+        /**
+         * Return the duration in human readable format
+         */
+        {
+            const uint64_t years    = Duration_Years();
+            const uint64_t days     = Duration_Days();
+            const uint64_t hours    = Duration_Hours();
+            const uint64_t minutes  = Duration_Hours();
+            const uint64_t seconds  = Duration_Seconds();
+
+            std::string duration_string;
+            if (days != 0)
+                duration_string += TimingNamespace::IntToStr(days) + std::string("d");
+            if (hours != 0 or days != 0)
+                duration_string += TimingNamespace::IntToStr(hours,2,'0') + std::string("h");
+            if (minutes != 0 or hours != 0 or days != 0)
+                duration_string += TimingNamespace::IntToStr(minutes,2,'0') + std::string("m");
+            duration_string += TimingNamespace::IntToStr(seconds,2,'0') + std::string("s");
+
+            return duration_string;
+        }
+
 };
 
-
-// **************************************************************
-inline std::string Format_Seconds_Human_Readable(const double s)
-{
-    double tmp = s;
-
-    const unsigned int days = (unsigned int) std::floor(tmp / double(86400)); // 86400 seconds per day
-    tmp = std::max(0.0, tmp - double(days*86400));
-    const unsigned int hours = (unsigned int) std::floor(tmp / double(3600));  // 3600 seconds per hour
-    tmp = std::max(0.0, tmp - double(hours*3600));
-    const unsigned int minutes = (unsigned int) std::floor(tmp / double(60));    // 60 seconds per minute
-    tmp = std::max(0.0, tmp - double(minutes*60));
-    const unsigned int seconds = (unsigned int) tmp;
-
-    std::string s_string;
-    if (days != 0)
-        s_string += TimingNamespace::IntToStr(days) + std::string("d");
-    if (hours != 0 or days != 0)
-        s_string += TimingNamespace::IntToStr(hours,2,'0') + std::string("h");
-    if (minutes != 0 or hours != 0 or days != 0)
-        s_string += TimingNamespace::IntToStr(minutes,2,'0') + std::string("m");
-    s_string += TimingNamespace::IntToStr(seconds,2,'0') + std::string("s");
-
-    return s_string;
-}
 
 // **************************************************************
 template <class Double>
@@ -329,7 +327,7 @@ void Print_Timing_Info(const Double nt)
                                                         (Timings[total_key].Get_Duration() / Timings[total_key].Get_Duration())*100.0);
     }
     log("%s|---------------------------|-----------------------------------------|\n", s.c_str());
-    log("%s| Total (human readable):   | %39s |\n", s.c_str(), Format_Seconds_Human_Readable(Timings[total_key].Get_Duration()).c_str());
+    log("%s| Total (human readable):   | %39s |\n", s.c_str(), Timings[total_key].Duration_Human_Readable().c_str());
     log("%s|---------------------------------------------------------------------|\n\n", s.c_str());
 
 
