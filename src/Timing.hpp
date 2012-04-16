@@ -179,6 +179,9 @@ class Timing
 
         // ******************************************************
         Double Calculate_Duration()
+        /**
+         * Get actual time and return number of seconds (float representation) since start of timer.
+         */
         {
             assert(is_initialized);
 
