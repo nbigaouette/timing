@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
     Timings["Test1"].Reset_Timer();
     int itemp = 0;
-    const int N = 242000000;
+    const int N = 1000000000;
     for (int i = 0; i< N; i++)
         itemp += itemp;
     Timings["Test1"].Update_Duration();
