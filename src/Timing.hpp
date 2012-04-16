@@ -151,7 +151,7 @@ class Timing
          * Returns timer's elapsed duration in seconds (float representation).
          */
         {
-            return Double(Get_Duration_Seconds() + Get_Duration_NanoSeconds());
+            return Double(Get_Duration_Seconds() + TenToNine*Get_Duration_NanoSeconds());
         }
 
 };
