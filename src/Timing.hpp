@@ -366,7 +366,6 @@ void Print_Timing_Info(const Double nt)
     log("%s| Total (human readable):   | %39s |\n", s.c_str(), Timings[total_key].Duration_Human_Readable().c_str());
     log("%s|---------------------------------------------------------------------|\n\n", s.c_str());
 
-
     time_t rawtime;
     time(&rawtime);
     const int timing_max_string_size = 1000;
