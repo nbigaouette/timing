@@ -8,7 +8,7 @@
 
 #include "Timing.hpp"
 
-std::map<std::string, Timing<double> > Timings;
+std::map<std::string, Timing> Timings;
 
 // **************************************************************
 int main(int argc, char *argv[])
@@ -39,12 +39,12 @@ int main(int argc, char *argv[])
     Timings["Test1"].Update_Duration();
 
     Timings["Wait"].Reset_Timer();
-    TimingNamespace::Wait(1.0);
+    timing::Wait(1.0);
     Timings["Wait"].Update_Duration();
 
     Timings["Total"].Update_Duration();
 
-    Print_Timing_Info(double(N));
+    timing::Print_Timing_Info(double(N));
 
     return EXIT_SUCCESS;
 }
