@@ -16,6 +16,8 @@ include makefiles/Makefile.rules
 #################################################################
 # Project specific options
 
+LDFLAGS         += -lrt
+
 include makefiles/Makefile.library
 
 $(eval $(call Flags_template,stdcout,StdCout.hpp,ssh://optimusprime.selfip.net/git/nicolas/stdcout.git))
