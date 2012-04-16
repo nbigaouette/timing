@@ -278,19 +278,23 @@ class Timing
 
 namespace TimingNamespace
 {
+    // **************************************************************
     template <class Double>
-    void Wait(const Double duration_sec)
+    void Wait(const Double seconds)
+    /**
+     * Wait for a specific amount of time.
+     * NOTE: The "Timing" class will NOT count this sleep time in its timer!
+     */
     {
-        Double delay = 0.0;
-//         timeval initial, now;
-//         gettimeofday(&initial, NULL);
-//         while (delay <= duration_sec)
-//         {
-//             gettimeofday(&now, NULL);
-//             // Transform time into double delay
-//             delay = double(now.tv_sec - initial.tv_sec) + 1.0e-6*double(now.tv_usec - initial.tv_usec);
-//             //printf("Delay = %.6f   max = %.6f\n", delay, duration_sec);
-//         }
+        timespec to_wait, remaining;
+        to_wait.tv_sec = time_t(seconds);
+        to_wait.tv_nsec = long((seconds - Double(to_wait.tv_sec)) * sec_to_nanosec);
+        int return_value = nanosleep(&to_wait, &remaining);
+        if (return_value != 0)
+        {
+            log("ERROR in Wait()\n");
+            abort();
+        }
     }
 
     // **************************************************************
