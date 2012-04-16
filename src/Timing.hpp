@@ -4,13 +4,11 @@
 #include <map>
 #include <string>
 #include <cstdio>
-#include <iostream>
 #include <cmath>
-#include <sstream>
+#include <time.h>  // timespec
+#include <sstream> // Defines also "timespec"
 #include <cassert>
 #include <stdint.h> // (u)int64_t
-
-#include <time.h>
 
 // log() is defined in StdCout.hpp
 #include <StdCout.hpp>

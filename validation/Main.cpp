@@ -5,6 +5,8 @@
 
 #include <stdint.h> // uint64_t
 #include <limits>  // http://www.cplusplus.com/reference/std/limits/numeric_limits/
+#include <iostream>
+#include <cstdlib>
 
 #include "Timing.hpp"
 

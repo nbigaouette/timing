@@ -1,6 +1,7 @@
 
-
 #include "Timing.hpp"
+
+#include <cstdlib>
 
 using namespace timing;
 
