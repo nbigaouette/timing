@@ -12,7 +12,11 @@
 
 #include <time.h>
 
+// log() is defined in StdCout.hpp
 #include <StdCout.hpp>
+#ifndef log
+#define log printf
+#endif // #ifndef log
 
 const long TenToNine = 1000000000L; // 10^9
 
