@@ -272,7 +272,6 @@ class Timing
 
             return duration_string;
         }
-
 };
 
 
