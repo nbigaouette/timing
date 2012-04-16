@@ -19,6 +19,19 @@
 
 const long TenToNine = 1000000000L; // 10^9
 
+const uint64_t years_to_days    = 365;
+const uint64_t days_to_hours    = 24;
+const uint64_t hours_to_min     = 60;
+const uint64_t min_to_sec       = 60;
+
+const uint64_t years_to_hours   = years_to_days * days_to_hours;
+const uint64_t years_to_min     = years_to_days * days_to_hours * hours_to_min;
+const uint64_t years_to_sec     = years_to_days * days_to_hours * hours_to_min * min_to_sec;
+
+const uint64_t days_to_min      = days_to_hours * hours_to_min;
+const uint64_t days_to_sec      = days_to_hours * hours_to_min * min_to_sec;
+
+const uint64_t hours_to_sec     = hours_to_min * min_to_sec;
 
 namespace TimingNamespace
 {
@@ -185,6 +198,66 @@ class Timing
             duration = now - start;
             return Get_Duration();
         }
+
+        // **************************************************************
+        uint64_t Duration_Years()
+        /**
+        * Return how many years.
+        */
+        {
+            return uint64_t(std::floor(Get_Duration() / Double(years_to_sec)));
+        }
+
+        // **************************************************************
+        uint64_t Duration_Days()
+        /**
+        * Return how many months (not including full years).
+        */
+        {
+            const uint64_t years = Duration_Years();
+            Double remaining_seconds = std::max(0.0, Get_Duration() - Double(years*years_to_sec));
+            return uint64_t(std::floor(remaining_seconds / Double(days_to_sec)));
+        }
+
+        // **************************************************************
+        uint64_t Duration_Hours()
+        /**
+        * Return how many hours (not including full years or days).
+        */
+        {
+            const uint64_t years = Duration_Years();
+            const uint64_t days  = Duration_Days();
+            Double remaining_seconds = std::max(0.0, Get_Duration() - Double(years*years_to_sec) - Double(days*days_to_sec));
+            return uint64_t(std::floor(remaining_seconds / Double(hours_to_sec)));
+        }
+
+        // **************************************************************
+        uint64_t Duration_Minutes()
+        /**
+        * Return how many minutes (not including full years, days or hours).
+        */
+        {
+            const uint64_t years = Duration_Years();
+            const uint64_t days  = Duration_Days();
+            const uint64_t hours = Duration_Hours();
+            Double remaining_seconds = std::max(0.0, Get_Duration() - Double(years*years_to_sec) - Double(days*days_to_sec) - Double(hours*hours_to_sec));
+            return uint64_t(std::floor(remaining_seconds / Double(min_to_sec)));
+        }
+
+        // **************************************************************
+        uint64_t Duration_Seconds()
+        /**
+        * Return how many minutes (not including full years, days, hours or minutes).
+        */
+        {
+            const uint64_t years    = Duration_Years();
+            const uint64_t days     = Duration_Days();
+            const uint64_t hours    = Duration_Hours();
+            const uint64_t minutes  = Duration_Hours();
+            Double remaining_seconds = std::max(0.0, Get_Duration() - Double(years*years_to_sec) - Double(days*days_to_sec) - Double(hours*hours_to_sec) - Double(minutes*min_to_sec));
+            return uint64_t(std::floor(remaining_seconds));
+        }
+
 };
 
 
