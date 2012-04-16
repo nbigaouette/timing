@@ -33,7 +33,7 @@ const uint64_t days_to_sec      = days_to_hours * hours_to_min * min_to_sec;
 
 const uint64_t hours_to_sec     = hours_to_min * min_to_sec;
 
-const double nanosec_to_sec   = TenToNine;
+const double nanosec_to_sec   = 1.0e9;
 const double sec_to_nanosec   = 1.0 / nanosec_to_sec;
 
 // Forward declaration
