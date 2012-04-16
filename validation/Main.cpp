@@ -14,6 +14,7 @@
 // #include "Version.hpp"
 // #include "Git_Diff.hpp"
 
+std::map<std::string, Timing<double> > Timings;
 
 // **************************************************************
 int main(int argc, char *argv[])
@@ -56,6 +57,19 @@ int main(int argc, char *argv[])
     std::cout << "std::numeric_limits<long>::max()   =  " << std::numeric_limits<long>::max() << "\n";
     std::cout << "std::numeric_limits<time_t>::min() = " << std::numeric_limits<time_t>::min() << "\n";
     std::cout << "std::numeric_limits<long>::min()   = " << std::numeric_limits<long>::min() << "\n";
+
+    Timings["Total"].Reset_Timer();
+
+    Timings["Test1"].Reset_Timer();
+    int itemp = 0;
+    const int N = 242000000;
+    for (int i = 0; i< N; i++)
+        itemp += itemp;
+    Timings["Test1"].Update_Duration();
+
+    Timings["Total"].Update_Duration();
+
+    Print_Timing_Info(double(N));
 
     return EXIT_SUCCESS;
 }
