@@ -227,43 +227,34 @@ void Print_Timing_Info(const Double nt)
         }
     }
 
-    std_cout
-        << s << "_______________________________________________________________________\n"
-        << s << "|                  Timing of different code aspects                   |\n"
-        << s << "|---------------------------------------------------------------------|\n"
-        << s << "|       Code Aspect         |          Duration          | Percentage |\n"
-        << s << "|                           |  seconds   | per time step | over total |\n"
-        << s << "|---------------------------|------------|---------------|------------|\n";
+    log("%s_______________________________________________________________________\n", s.c_str());
+    log("%s|                  Timing of different code aspects                   |\n", s.c_str());
+    log("%s|---------------------------------------------------------------------|\n", s.c_str());
+    log("%s|       Code Aspect         |          Duration          | Percentage |\n", s.c_str());
+    log("%s|                           |  seconds   | per time step | over total |\n", s.c_str());
+    log("%s|---------------------------|------------|---------------|------------|\n", s.c_str());
     for (typename std::map<std::string, Timing<Double> >::iterator it = Timings.begin() ; it != Timings.end(); it++ )
     {
         if (it->first != total_key)
         {
-            std_cout << s << "| ";
-                std_cout.Format(25, 0, 's', 'l'); std_cout << it->first << " | ";
-                std_cout.Format(10, 5, 'g'); std_cout << Timings[it->first].Get_Duration() << " | ";
-                std_cout.Format(13, 6, 'g'); std_cout << Timings[it->first].Get_Duration() / nt << " | ";
+            log("%s| %-25s | %10.5g | %13.6g | ", s.c_str(), it->first.c_str(), Timings[it->first].Get_Duration(), Timings[it->first].Get_Duration() / nt);
                 if (total_found)
                 {
-                    std_cout.Format(10, 2, 'f'); std_cout << (Timings[it->first].Get_Duration() / Timings[total_key].Get_Duration())*100.0 << " |\n";
+                    log("%10.2f |\n", (Timings[it->first].Get_Duration() / Timings[total_key].Get_Duration())*100.0);
                 }
                 else
-                    std_cout << "     -    " << " |\n";
+                    log("     -     |\n");
         }
     }
     if (total_found)
     {
-        std_cout << s << "| ";
-            std_cout.Format(25, 0, 's', 'l'); std_cout << total_key << " | ";
-            std_cout.Format(10, 5, 'g'); std_cout << Timings[total_key].Get_Duration() << " | ";
-            std_cout.Format(13, 6, 'g'); std_cout << Timings[total_key].Get_Duration() / nt << " | ";
-            std_cout.Format(10, 2, 'f'); std_cout << (Timings[total_key].Get_Duration() / Timings[total_key].Get_Duration())*100.0 << " |\n";
+        log("%s| %-25s | %10.5g | %13.6g | %10.2f |\n", s.c_str(), total_key.c_str(), Timings[total_key].Get_Duration(),
+                                                        Timings[total_key].Get_Duration() / nt,
+                                                        (Timings[total_key].Get_Duration() / Timings[total_key].Get_Duration())*100.0);
     }
-    std_cout
-        << s << "|---------------------------|-----------------------------------------|\n"
-        << s << "| Total (human readable):   | ";
-            std_cout.Format(39, 0, 's'); std_cout << Format_Seconds_Human_Readable(Timings[total_key].Get_Duration()) << " |\n"
-        << s << "|---------------------------------------------------------------------|\n"
-        << "\n";
+    log("%s|---------------------------|-----------------------------------------|\n", s.c_str());
+    log("%s| Total (human readable):   | %39s |\n", s.c_str(), Format_Seconds_Human_Readable(Timings[total_key].Get_Duration()).c_str());
+    log("%s|---------------------------------------------------------------------|\n\n", s.c_str());
 
 
     time_t rawtime;
@@ -273,7 +264,7 @@ void Print_Timing_Info(const Double nt)
     struct tm *date_format; // Saves in Date format
     date_format = localtime(&rawtime);
     strftime(date_out, timing_max_string_size, "%A, %B %dth %Y, %Hh%M:%S (%Y%m%d%H%M%S)", date_format);
-    std_cout << "\nEnding time and date:\n    " << date_out << std::endl << std::endl;
+    log("\nEnding time and date:\n    %s\n", date_out);
 }
 
 
