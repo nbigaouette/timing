@@ -10,8 +10,11 @@
 #include <sstream>
 #include <stdint.h> // (u)int64_t
 
+#include <time.h>
 
 #include <StdCout.hpp>
+
+const long TenToNine = 1000000000L; // 10^9
 
 
 namespace TimingNamespace
@@ -19,9 +22,69 @@ namespace TimingNamespace
     template <class Double>
     void Wait(const Double duration_sec)
     {
-        {
-        }
+
+class Timer
+{
+private:
+    timespec timer;
+
+public:
+
+    time_t Get_sec()  const { return timer.tv_sec;  }
+    long   Get_nsec() const { return timer.tv_nsec; }
+
+    void Clear()
+    {
+        timer.tv_sec  = 0;
+        timer.tv_nsec = 0;
     }
+
+    Timer()
+    {
+        Clear();
+    }
+
+    Timer operator+(const Timer &other)
+    /**
+     * Add two timers
+     */
+    {
+        timer.tv_sec  = timer.tv_sec  + other.timer.tv_sec;
+        timer.tv_nsec = timer.tv_nsec + other.timer.tv_nsec;
+
+        // tv_nsec stores the nansecond between tv_sec and the next second.
+        // Increment the number of seconds if needed
+        if (timer.tv_nsec >= TenToNine)
+        {
+            timer.tv_sec++;
+            timer.tv_nsec = timer.tv_nsec - TenToNine;
+        }
+
+        return *this;
+    }
+
+    Timer operator-(const Timer &other)
+    {
+        // Prevent overflow in the case that tv_nsec > other.tv_nsec
+        if (timer.tv_nsec - other.timer.tv_nsec < 0)
+        {
+            timer.tv_sec  = timer.tv_sec - other.timer.tv_sec - 1;
+            timer.tv_nsec = TenToNine + timer.tv_nsec - other.timer.tv_nsec;
+        }
+        else
+        {
+            timer.tv_sec  = timer.tv_sec  - other.timer.tv_sec;
+            timer.tv_nsec = timer.tv_nsec - other.timer.tv_nsec;
+        }
+
+        return *this;
+    }
+
+    void Get_Current_Time()
+    {
+        clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &(this->timer));
+    }
+};
 
 template <class Double>
 class Timing
