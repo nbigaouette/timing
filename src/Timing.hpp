@@ -124,7 +124,7 @@ class Timing
             assert(is_initialized);
 
             end.Get_Current_Time();
-            duration += (end - start);
+            duration = duration + (end - start);
         }
 
         // ******************************************************
