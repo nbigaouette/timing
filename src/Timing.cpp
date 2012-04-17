@@ -3,8 +3,6 @@
 
 #include <cstdlib>
 
-using namespace timing;
-
 // **************************************************************
 time_t Timer::Get_sec() const
 {
@@ -41,10 +39,10 @@ Timer Timer::operator+(const Timer &other)
 
     // tv_nsec stores the nansecond between tv_sec and the next second.
     // Increment the number of seconds if needed
-    if (timer.tv_nsec >= TenToNine)
+    if (timer.tv_nsec >= timing::TenToNine)
     {
         timer.tv_sec++;
-        timer.tv_nsec = timer.tv_nsec - TenToNine;
+        timer.tv_nsec = timer.tv_nsec - timing::TenToNine;
     }
 
     return *this;
@@ -57,7 +55,7 @@ Timer Timer::operator-(const Timer &other)
     if (timer.tv_nsec - other.timer.tv_nsec < 0)
     {
         timer.tv_sec  = timer.tv_sec - other.timer.tv_sec - 1;
-        timer.tv_nsec = TenToNine + timer.tv_nsec - other.timer.tv_nsec;
+        timer.tv_nsec = timing::TenToNine + timer.tv_nsec - other.timer.tv_nsec;
     }
     else
     {
@@ -126,7 +124,7 @@ void Timing::Add_Seconds(const double seconds)
  */
 {
     time_t nb_seconds = time_t(std::floor(seconds));
-    long nanoseconds = long((seconds - double(nb_seconds)) * sec_to_nanosec);
+    long nanoseconds = long((seconds - double(nb_seconds)) * timing::sec_to_nanosec);
     end.Add_sec(nb_seconds);
     end.Add_nsec(nanoseconds);
     duration = end - start;
@@ -156,7 +154,7 @@ double Timing::Get_Duration()
  * Returns timer's elapsed duration in seconds (float representation).
  */
 {
-    return double(Get_Duration_Seconds()) + double(Get_Duration_NanoSeconds()) / double(TenToNine);
+    return double(Get_Duration_Seconds()) + double(Get_Duration_NanoSeconds()) / double(timing::TenToNine);
 }
 
 // **************************************************************
@@ -179,7 +177,7 @@ uint64_t Timing::Duration_Years()
  * Return how many years.
  */
 {
-    return uint64_t(std::floor(Get_Duration() / double(years_to_sec)));
+    return uint64_t(std::floor(Get_Duration() / double(timing::years_to_sec)));
 }
 
 // **************************************************************
@@ -189,8 +187,8 @@ uint64_t Timing::Duration_Days()
  */
 {
     const uint64_t years = Duration_Years();
-    double remaining_seconds = std::max(0.0, Get_Duration() - double(years*years_to_sec));
-    return uint64_t(std::floor(remaining_seconds / double(days_to_sec)));
+    double remaining_seconds = std::max(0.0, Get_Duration() - double(years*timing::years_to_sec));
+    return uint64_t(std::floor(remaining_seconds / double(timing::days_to_sec)));
 }
 
 // **************************************************************
@@ -201,8 +199,8 @@ uint64_t Timing::Duration_Hours()
 {
     const uint64_t years = Duration_Years();
     const uint64_t days  = Duration_Days();
-    double remaining_seconds = std::max(0.0, Get_Duration() - double(years*years_to_sec) - double(days*days_to_sec));
-    return uint64_t(std::floor(remaining_seconds / double(hours_to_sec)));
+    double remaining_seconds = std::max(0.0, Get_Duration() - double(years*timing::years_to_sec) - double(days*timing::days_to_sec));
+    return uint64_t(std::floor(remaining_seconds / double(timing::hours_to_sec)));
 }
 
 // **************************************************************
@@ -214,8 +212,8 @@ uint64_t Timing::Duration_Minutes()
     const uint64_t years = Duration_Years();
     const uint64_t days  = Duration_Days();
     const uint64_t hours = Duration_Hours();
-    double remaining_seconds = std::max(0.0, Get_Duration() - double(years*years_to_sec) - double(days*days_to_sec) - double(hours*hours_to_sec));
-    return uint64_t(std::floor(remaining_seconds / double(min_to_sec)));
+    double remaining_seconds = std::max(0.0, Get_Duration() - double(years*timing::years_to_sec) - double(days*timing::days_to_sec) - double(hours*timing::hours_to_sec));
+    return uint64_t(std::floor(remaining_seconds / double(timing::min_to_sec)));
 }
 
 // **************************************************************
@@ -228,7 +226,7 @@ uint64_t Timing::Duration_Seconds()
     const uint64_t days     = Duration_Days();
     const uint64_t hours    = Duration_Hours();
     const uint64_t minutes  = Duration_Hours();
-    double remaining_seconds = std::max(0.0, Get_Duration() - double(years*years_to_sec) - double(days*days_to_sec) - double(hours*hours_to_sec) - double(minutes*min_to_sec));
+    double remaining_seconds = std::max(0.0, Get_Duration() - double(years*timing::years_to_sec) - double(days*timing::days_to_sec) - double(hours*timing::hours_to_sec) - double(minutes*timing::min_to_sec));
     return uint64_t(std::floor(remaining_seconds));
 }
 
@@ -246,12 +244,12 @@ std::string Timing::Duration_Human_Readable()
 
     std::string duration_string;
     if (days != 0)
-        duration_string += IntToStr(days) + std::string("d");
+        duration_string += timing::IntToStr(days) + std::string("d");
     if (hours != 0 or days != 0)
-        duration_string += IntToStr(hours,2,'0') + std::string("h");
+        duration_string += timing::IntToStr(hours,2,'0') + std::string("h");
     if (minutes != 0 or hours != 0 or days != 0)
-        duration_string += IntToStr(minutes,2,'0') + std::string("m");
-    duration_string += IntToStr(seconds,2,'0') + std::string("s");
+        duration_string += timing::IntToStr(minutes,2,'0') + std::string("m");
+    duration_string += timing::IntToStr(seconds,2,'0') + std::string("s");
 
     return duration_string;
 }
@@ -268,7 +266,7 @@ namespace timing
     {
         timespec to_wait, remaining;
         to_wait.tv_sec = time_t(seconds);
-        to_wait.tv_nsec = long((seconds - double(to_wait.tv_sec)) * sec_to_nanosec);
+        to_wait.tv_nsec = long((seconds - double(to_wait.tv_sec)) * timing::sec_to_nanosec);
         int return_value = nanosleep(&to_wait, &remaining);
         if (return_value != 0)
         {
