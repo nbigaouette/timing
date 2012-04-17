@@ -112,7 +112,7 @@ namespace timing
 
     // **************************************************************
     template <class Integer>
-    inline std::string IntToStr(const Integer integer, const int width, const char fill)
+    std::string IntToStr(const Integer integer, const int width = 0, const char fill = ' ')
     {
         std::ostringstream MyStream;
         if (width != 0)
