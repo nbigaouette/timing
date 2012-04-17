@@ -17,7 +17,7 @@ include makefiles/Makefile.rules
 #################################################################
 # Project specific options
 
-# Do we want to use stdcout.git? If not, comment to the following lines:
+# Do we want to use stdcout.git? If not, comment the following lines:
 CFLAGS          += -DUSE_STDCOUT
 $(eval $(call Flags_template,stdcout,StdCout.hpp,ssh://optimusprime.selfip.net/git/nicolas/stdcout.git))
 
