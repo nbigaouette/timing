@@ -336,7 +336,7 @@ namespace timing
     }
 
     // **********************************************************
-    void Print_Timing_Info(const double nt)
+    void Print(const double nt)
     {
         const std::string s("                   ");
         bool total_found = false;

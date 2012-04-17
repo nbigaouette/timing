@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     std::cout << "ETA: for 100xN = " << 100*N << " iterations: " << ETA.Get_ETA(0.1*duration) << "\n";
     std::cout << "&Timing_Total = " << &Timing_Total << "\n";
 
-    timing::Print_Timing_Info(double(N));
+    timing::Print(double(N));
 
     return EXIT_SUCCESS;
 }

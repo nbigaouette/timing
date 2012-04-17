@@ -97,7 +97,7 @@ namespace timing
     // **********************************************************
     Timer & New_Timer(const std::string name);
     void Wait(const double seconds);
-    void Print_Timing_Info(const double nt);
+    void Print(const double nt);
 
     // **********************************************************
     template <class Integer>
