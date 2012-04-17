@@ -355,8 +355,6 @@ namespace timing
         Timing tmp;
         tmp.Add_Seconds(eta);
 
-        tmp.Print();
-
         return tmp.Duration_Human_Readable();
     }
 }
