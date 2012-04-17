@@ -364,7 +364,7 @@ namespace timing
         static double first_time = time;
 
         // Wait 0.5% before calculating an ETA to let the simulation stabilize.
-        if (time/duration < 5.0e-3)
+        if ((time - first_time)/duration < 5.0e-3)
             return std::string("-");
 
         // ETA: Estimated Time of Arrival (s)
