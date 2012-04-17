@@ -10,7 +10,6 @@
 
 #include "Timing.hpp"
 
-std::map<std::string, Timing> Timings;
 
 // **************************************************************
 int main(int argc, char *argv[])
@@ -32,24 +31,29 @@ int main(int argc, char *argv[])
     std::cout << "std::numeric_limits<long>::min()   = " << std::numeric_limits<long>::min() << "\n";
 
     const uint64_t N = 500000000;
+
+    static Timing &Timing_Total = timing::New_Timer("Total");
+    Timing_Total.Reset_Timer();
+
+    // timing::Calculate_ETA() must be called at least once before it can return something useful.
     timing::Calculate_ETA(0, double(10*N));
 
-    Timings["Total"].Reset_Timer();
-
-    Timings["Test1"].Reset_Timer();
+    static Timing &Timing_Test1 = timing::New_Timer("Test1");
+    Timing_Test1.Reset_Timer();
     int itemp = 0;
     for (uint64_t i = 0 ; i < N ; i++)
         itemp += itemp;
-    Timings["Test1"].Update_Duration();
+    Timing_Test1.Update_Duration();
 
-    Timings["Wait"].Reset_Timer();
+    static Timing &Timing_Wait = timing::New_Timer("Wait");
+    Timing_Wait.Reset_Timer();
     timing::Wait(1.0);
-    Timings["Wait"].Update_Duration();
+    Timing_Wait.Update_Duration();
 
-    Timings["Total"].Update_Duration();
+    Timing_Total.Update_Duration();
 
     // Bogus ETA
-    std::cout << "ETA: for 100xN = " << 10*N << " iterations: " << timing::Calculate_ETA(double(N), double(10*N)) << "\n";
+    std::cout << "ETA: for 100xN = " << 100*N << " iterations: " << timing::Calculate_ETA(double(N), double(100*N)) << "\n";
 
     timing::Print_Timing_Info(double(N));
 

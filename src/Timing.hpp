@@ -19,8 +19,6 @@
 
 // Forward declaration
 class Timing;
-// Timing global variable
-extern std::map<std::string, Timing> Timings;
 
 // **************************************************************
 namespace timing
@@ -98,6 +96,7 @@ class Timing
 namespace timing
 {
     // **************************************************************
+    Timing & New_Timer(const std::string name);
     void Wait(const double seconds);
     void Print_Timing_Info(const double nt);
     std::string Calculate_ETA(const double time, const double duration);

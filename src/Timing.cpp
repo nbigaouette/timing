@@ -271,8 +271,17 @@ void Timing::Print() const
     duration.Print();
 }
 
+// **************************************************************
 namespace timing
 {
+    std::map<std::string, Timing> TimingsMap;
+
+    // **********************************************************
+    Timing & New_Timer(const std::string name)
+    {
+        return TimingsMap[name];
+    }
+
     // **********************************************************
     void Wait(const double seconds)
     /**
@@ -298,7 +307,7 @@ namespace timing
         bool total_found = false;
         std::string total_key;
 
-        for (std::map<std::string, Timing>::iterator it = Timings.begin() ; it != Timings.end(); it++ )
+        for (std::map<std::string, Timing>::iterator it = TimingsMap.begin() ; it != TimingsMap.end(); it++ )
         {
             if (it->first == "Total" || it->first == "total")
             {
@@ -313,14 +322,14 @@ namespace timing
         log("%s|       Code Aspect         |          Duration          | Percentage |\n", s.c_str());
         log("%s|                           |  seconds   | per time step | over total |\n", s.c_str());
         log("%s|---------------------------|------------|---------------|------------|\n", s.c_str());
-        for (std::map<std::string, Timing>::iterator it = Timings.begin() ; it != Timings.end(); it++ )
+        for (std::map<std::string, Timing>::iterator it = TimingsMap.begin() ; it != TimingsMap.end(); it++ )
         {
             if (it->first != total_key)
             {
-                log("%s| %-25s | %10.5g | %13.6g | ", s.c_str(), it->first.c_str(), Timings[it->first].Get_Duration(), Timings[it->first].Get_Duration() / nt);
+                log("%s| %-25s | %10.5g | %13.6g | ", s.c_str(), it->first.c_str(), TimingsMap[it->first].Get_Duration(), TimingsMap[it->first].Get_Duration() / nt);
                     if (total_found)
                     {
-                        log("%10.2f |\n", (Timings[it->first].Get_Duration() / Timings[total_key].Get_Duration())*100.0);
+                        log("%10.2f |\n", (TimingsMap[it->first].Get_Duration() / TimingsMap[total_key].Get_Duration())*100.0);
                     }
                     else
                         log("     -     |\n");
@@ -328,12 +337,12 @@ namespace timing
         }
         if (total_found)
         {
-            log("%s| %-25s | %10.5g | %13.6g | %10.2f |\n", s.c_str(), total_key.c_str(), Timings[total_key].Get_Duration(),
-                                                            Timings[total_key].Get_Duration() / nt,
-                                                            (Timings[total_key].Get_Duration() / Timings[total_key].Get_Duration())*100.0);
+            log("%s| %-25s | %10.5g | %13.6g | %10.2f |\n", s.c_str(), total_key.c_str(), TimingsMap[total_key].Get_Duration(),
+                                                            TimingsMap[total_key].Get_Duration() / nt,
+                                                            (TimingsMap[total_key].Get_Duration() / TimingsMap[total_key].Get_Duration())*100.0);
         }
         log("%s|---------------------------|-----------------------------------------|\n", s.c_str());
-        log("%s| Total (human readable):   | %39s |\n", s.c_str(), Timings[total_key].Duration_Human_Readable().c_str());
+        log("%s| Total (human readable):   | %39s |\n", s.c_str(), TimingsMap[total_key].Duration_Human_Readable().c_str());
         log("%s|---------------------------------------------------------------------|\n\n", s.c_str());
 
         time_t rawtime;
@@ -359,7 +368,8 @@ namespace timing
             return std::string("-");
 
         // ETA: Estimated Time of Arrival (s)
-        const double eta = std::max(0.0, (duration - first_time) * Timings["Total"].Calculate_Duration() / (time - first_time) - Timings["Total"].Calculate_Duration());
+        static Timing &Timing_Total = TimingsMap["Total"];
+        const double eta = std::max(0.0, (duration - first_time) * Timing_Total.Calculate_Duration() / (time - first_time) - Timing_Total.Calculate_Duration());
 
         Timing tmp;
         tmp.Add_Seconds(eta);
