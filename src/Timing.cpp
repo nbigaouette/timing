@@ -2,6 +2,7 @@
 #include "Timing.hpp"
 
 #include <cstdlib>
+#include <cstring> // memset()
 
 namespace timing
 {
@@ -334,49 +335,135 @@ namespace timing
     }
 
     // **********************************************************
+    void Print_N_Times(const std::string x, const size_t N, const bool newline)
+    {
+        for (size_t i = 0 ; i < N ; i++)
+        {
+            log("%s", x.c_str());
+        }
+
+        if (newline)
+            log("\n");
+    }
+
+
+    // **********************************************************
+    void Print_Code_Aspect(const std::string &s, const std::string &timer_name,
+                           const size_t longest_length, const std::string &total_key,
+                           const double nt, const bool total_found)
+    {
+        std::string timer_name_w_spaces("");
+        timer_name_w_spaces = timer_name;
+        timer_name_w_spaces.resize(longest_length, ' ');
+//         log("%s| %-25s | %10.5g | %13.6g | ", s.c_str(), timer_name.c_str(), TimersMap[timer_name].Get_Duration(), TimersMap[timer_name].Get_Duration() / nt);
+
+        log("%s|", s.c_str());
+        log(" %s ", timer_name_w_spaces.c_str());
+        log("| %10.5g | %13.6g | ", TimersMap[timer_name].Get_Duration(), TimersMap[timer_name].Get_Duration() / nt);
+
+        if (total_found)
+        {
+            log("%10.2f |\n", (TimersMap[timer_name].Get_Duration() / TimersMap[total_key].Get_Duration())*100.0);
+        }
+        else
+            log("     -     |\n");
+    }
+
+    // **********************************************************
     void _Print(const double nt)
     {
-        const std::string s("                   ");
         bool total_found = false;
-        std::string total_key;
+        std::string total_name;
 
+        size_t longest_length = 0;
+        size_t current_length = 0;
         for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end(); ++it )
         {
             if (it->first == "Total" || it->first == "total")
             {
                 total_found = true;
-                total_key = it->first;
+                total_name = it->first;
+            }
+
+            // Find longest name
+            current_length = it->first.length();
+            if (current_length > longest_length)
+            {
+                longest_length = current_length;
             }
         }
 
-        log("%s_______________________________________________________________________\n", s.c_str());
-        log("%s|                  Timing of different code aspects                   |\n", s.c_str());
-        log("%s|---------------------------------------------------------------------|\n", s.c_str());
-        log("%s|       Code Aspect         |          Duration          | Percentage |\n", s.c_str());
-        log("%s|                           |  seconds   | per time step | over total |\n", s.c_str());
-        log("%s|---------------------------|------------|---------------|------------|\n", s.c_str());
+        std::string total_human_readable("Total (human readable)");
+        const std::string timings("Timing of different code aspects");
+        longest_length = std::max(longest_length, total_human_readable.length());
+        const size_t total_length_minus_longest = 44;
+        const size_t total_length = total_length_minus_longest + longest_length; // Does not include the first and last "|"
+
+        // Center the table inside 128 columns
+        const size_t length_max = 128;
+        const size_t length_s = size_t(std::floor(double(length_max - total_length+2) / 2.0));
+        const std::string s(length_s, ' ');
+
+        log("%s", s.c_str());
+        Print_N_Times("_", total_length+2);
+
+        {
+            const size_t length = timings.length();
+            const size_t length_left  = (total_length - length) / 2;
+            const size_t length_right =  total_length - length - length_left;
+            log("%s|", s.c_str());
+            Print_N_Times(" ", length_left, false);
+            log("%s", timings.c_str());
+            Print_N_Times(" ", length_right, false);
+            log("|\n");
+        }
+
+        log("%s|", s.c_str());
+        Print_N_Times("-", total_length, false);
+        log("|\n");
+
+        {
+            const std::string code_aspects("Code Aspect");
+            const size_t length = code_aspects.length();
+            const size_t length_left  = (longest_length+2 - length) / 2;
+            const size_t length_right =  longest_length+2 - length - length_left;
+            log("%s|", s.c_str());
+            Print_N_Times(" ", length_left, false);
+            log("%s", code_aspects.c_str());
+            Print_N_Times(" ", length_right, false);
+            log("|");
+        }
+        log("          Duration          | Percentage |\n");
+
+        log("%s|", s.c_str());
+        Print_N_Times(" ", longest_length+2, false);
+        log("|  seconds   | per time step | over total |\n");
+
+        log("%s|", s.c_str());
+        Print_N_Times("-", longest_length+2, false);
+        log("|------------|---------------|------------|\n");
+
         for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end(); ++it )
         {
-            if (it->first != total_key)
-            {
-                log("%s| %-25s | %10.5g | %13.6g | ", s.c_str(), it->first.c_str(), TimersMap[it->first].Get_Duration(), TimersMap[it->first].Get_Duration() / nt);
-                    if (total_found)
-                    {
-                        log("%10.2f |\n", (TimersMap[it->first].Get_Duration() / TimersMap[total_key].Get_Duration())*100.0);
-                    }
-                    else
-                        log("     -     |\n");
-            }
+            if (it->first != total_name)
+                Print_Code_Aspect(s, it->first, longest_length, total_name, nt, total_found);
         }
+        // Print total last
         if (total_found)
         {
-            log("%s| %-25s | %10.5g | %13.6g | %10.2f |\n", s.c_str(), total_key.c_str(), TimersMap[total_key].Get_Duration(),
-                                                            TimersMap[total_key].Get_Duration() / nt,
-                                                            (TimersMap[total_key].Get_Duration() / TimersMap[total_key].Get_Duration())*100.0);
+            Print_Code_Aspect(s, total_name, longest_length, total_name, nt, !total_found);
         }
-        log("%s|---------------------------|-----------------------------------------|\n", s.c_str());
-        log("%s| Total (human readable):   | %39s |\n", s.c_str(), TimersMap[total_key].Duration_Human_Readable().c_str());
-        log("%s|---------------------------------------------------------------------|\n\n", s.c_str());
+
+        log("%s|", s.c_str());
+        Print_N_Times("-", longest_length+2, false);
+        log("|-----------------------------------------|\n");
+
+        total_human_readable.resize(longest_length, ' ');
+        log("%s| %s | %39s |\n", s.c_str(), total_human_readable.c_str(), TimersMap[total_name].Duration_Human_Readable().c_str());
+
+        log("%s|", s.c_str());
+        Print_N_Times("-", total_length, false);
+        log("|\n\n");
 
         time_t rawtime;
         time(&rawtime);

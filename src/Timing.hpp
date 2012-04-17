@@ -116,6 +116,7 @@ namespace timing
     // **********************************************************
     Timer & New_Timer(const std::string &name);
     void Wait(const double seconds);
+    void Print_N_Times(const std::string x, const size_t N, const bool newline = true);
     void _Print(const double nt);
 #ifndef DISABLE_TIMING
     inline void Print(const double nt)  { _Print(nt);               }
