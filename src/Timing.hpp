@@ -96,6 +96,7 @@ namespace timing
 
         public:
             Timer();
+            bool Is_Initialized() { return is_initialized; }
             void Reset_Duration();
             void Reset();
             void Update();

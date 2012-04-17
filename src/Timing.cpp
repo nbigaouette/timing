@@ -304,13 +304,20 @@ namespace timing
         {
             assert(Timer_Total_Ptr != NULL);
 
-            // ETA: Estimated Time of Arrival (s)
-            const double eta = std::max(0.0, (duration - first_time) * Timer_Total_Ptr->Calculate_Duration() / (time - first_time) - Timer_Total_Ptr->Calculate_Duration());
+            if (not Timer_Total_Ptr->Is_Initialized())
+            {
+                eta_string = "";
+            }
+            else
+            {
+                // ETA: Estimated Time of Arrival (s)
+                const double eta = std::max(0.0, (duration - first_time) * Timer_Total_Ptr->Calculate_Duration() / (time - first_time) - Timer_Total_Ptr->Calculate_Duration());
 
-            Timer tmp;
-            tmp.Add_Seconds(eta);
+                Timer tmp;
+                tmp.Add_Seconds(eta);
 
-            eta_string = tmp.Duration_Human_Readable();
+                eta_string = tmp.Duration_Human_Readable();
+            }
         }
 
         return eta_string;
