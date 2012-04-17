@@ -18,17 +18,22 @@
 #endif // #ifndef log
 
 // **************************************************************
-// Define useful macros
-#ifdef TIMING
+// Define useful macros.
+// The two macros TIMER_START() and TIMER_STOP() can be used to
+// allow easy enabling/disabling of any timer measurement. Just
+// define "DISABLE_TIMING" before including Timing.hpp (either
+// with a #define or with -DDISABLE_TIMING CFLAG) and these macros
+// won't do anything, as will ETA class and timing::Print().
+#ifndef DISABLE_TIMING
     #define TIMER_START(name, Timer_name) \
         static timing::Timer &Timer_name = timing::New_Timer(name); \
         Timer_name.Reset();
     #define TIMER_STOP(name, Timer_name) \
         Timer_name.Update();
-#else
+#else // #ifndef DISABLE_TIMING
     #define TIMER_START(name, Timer_name) {}
     #define TIMER_STOP(name, Timer_name)  {}
-#endif // #ifdef TIMING
+#endif // #ifndef DISABLE_TIMING
 
 // **************************************************************
 namespace timing
@@ -111,7 +116,12 @@ namespace timing
     // **********************************************************
     Timer & New_Timer(const std::string &name);
     void Wait(const double seconds);
-    void Print(const double nt);
+    void _Print(const double nt);
+#ifndef DISABLE_TIMING
+    inline void Print(const double nt)  { _Print(nt);               }
+#else // #ifndef DISABLE_TIMING
+    inline void Print(const double nt)  { /* Don't do anything */   }
+#endif // #ifndef DISABLE_TIMING
 
     // **********************************************************
     template <class Integer>
@@ -137,9 +147,17 @@ namespace timing
             double duration;
             Timer *Timer_Total_Ptr;
 
+            std::string _Get_ETA(const double time) const;
+
         public:
-            Eta(const double _first_time, const double _duration);
-            std::string Get_ETA(const double time) const;
+            void Init(const double _first_time, const double _duration);
+#ifndef DISABLE_TIMING
+            Eta(const double _first_time, const double _duration)   { Init(_first_time, _duration); }
+            std::string Get_ETA(const double time) const            { return _Get_ETA(time);        }
+#else // #ifndef DISABLE_TIMING
+            Eta(const double _first_time, const double _duration)   { /* Don't init anything */     }
+            std::string Get_ETA(const double time) const            { return std::string("-");      }
+#endif // #ifndef DISABLE_TIMING
     };
 } // namespace timing
 

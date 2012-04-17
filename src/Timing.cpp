@@ -282,7 +282,7 @@ namespace timing
     }
 
     // **********************************************************
-    Eta::Eta(const double _first_time, const double _duration)
+    void Eta::Init(const double _first_time, const double _duration)
     {
         first_time       = _first_time;
         duration         = _duration;
@@ -290,7 +290,7 @@ namespace timing
     }
 
     // **********************************************************
-    std::string Eta::Get_ETA(const double time) const
+    std::string Eta::_Get_ETA(const double time) const
     {
         std::string eta_string("");
 
@@ -334,7 +334,7 @@ namespace timing
     }
 
     // **********************************************************
-    void Print(const double nt)
+    void _Print(const double nt)
     {
         const std::string s("                   ");
         bool total_found = false;

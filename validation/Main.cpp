@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cstdlib>
 
+// #define DISABLE_TIMING
 #include "Timing.hpp"
 
 
