@@ -50,7 +50,6 @@ int main(int argc, char *argv[])
     const double time = 0.0;
     timing::Eta ETA(time, duration);
     std::cout << "ETA: for 100xN = " << 100*N << " iterations: " << ETA.Get_ETA(0.1*duration) << "\n";
-    std::cout << "&Timing_Total = " << &Timing_Total << "\n";
 
     timing::Print(double(N));
 

@@ -3,8 +3,6 @@
 
 #include <cstdlib>
 
-
-
 namespace timing
 {
     std::map<std::string, Timer> TimersMap;
