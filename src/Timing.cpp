@@ -193,7 +193,7 @@ namespace timing
     * Return how many years.
     */
     {
-        return uint64_t(std::floor(Get_Duration() / double(timing::years_to_sec)));
+        return uint64_t(std::floor(Get_Duration() / double(years_to_sec)));
     }
 
     // **********************************************************
@@ -203,8 +203,8 @@ namespace timing
     */
     {
         const uint64_t years = Duration_Years();
-        double remaining_seconds = std::max(0.0, Get_Duration() - double(years*timing::years_to_sec));
-        return uint64_t(std::floor(remaining_seconds / double(timing::days_to_sec)));
+        double remaining_seconds = std::max(0.0, Get_Duration() - double(years*years_to_sec));
+        return uint64_t(std::floor(remaining_seconds / double(days_to_sec)));
     }
 
     // **********************************************************
@@ -215,8 +215,8 @@ namespace timing
     {
         const uint64_t years = Duration_Years();
         const uint64_t days  = Duration_Days();
-        double remaining_seconds = std::max(0.0, Get_Duration() - double(years*timing::years_to_sec) - double(days*timing::days_to_sec));
-        return uint64_t(std::floor(remaining_seconds / double(timing::hours_to_sec)));
+        double remaining_seconds = std::max(0.0, Get_Duration() - double(years*years_to_sec) - double(days*days_to_sec));
+        return uint64_t(std::floor(remaining_seconds / double(hours_to_sec)));
     }
 
     // **********************************************************
@@ -228,8 +228,8 @@ namespace timing
         const uint64_t years = Duration_Years();
         const uint64_t days  = Duration_Days();
         const uint64_t hours = Duration_Hours();
-        double remaining_seconds = std::max(0.0, Get_Duration() - double(years*timing::years_to_sec) - double(days*timing::days_to_sec) - double(hours*timing::hours_to_sec));
-        return uint64_t(std::floor(remaining_seconds / double(timing::min_to_sec)));
+        double remaining_seconds = std::max(0.0, Get_Duration() - double(years*years_to_sec) - double(days*days_to_sec) - double(hours*hours_to_sec));
+        return uint64_t(std::floor(remaining_seconds / double(min_to_sec)));
     }
 
     // **********************************************************
@@ -242,7 +242,7 @@ namespace timing
         const uint64_t days     = Duration_Days();
         const uint64_t hours    = Duration_Hours();
         const uint64_t minutes  = Duration_Minutes();
-        double remaining_seconds = std::max(0.0, Get_Duration() - double(years*timing::years_to_sec) - double(days*timing::days_to_sec) - double(hours*timing::hours_to_sec) - double(minutes*timing::min_to_sec));
+        double remaining_seconds = std::max(0.0, Get_Duration() - double(years*years_to_sec) - double(days*days_to_sec) - double(hours*hours_to_sec) - double(minutes*min_to_sec));
         return uint64_t(std::floor(remaining_seconds));
     }
 
