@@ -2,11 +2,13 @@
 
 # Project options
 LIB             := timing
-BIN              = $(LIB)_test
+BIN              = $(LIB)
 SRCDIRS          = src
+TESTDIRS         = validation
 SRCEXT           = cpp
 HEADEXT          = hpp
 HEADERS          = $(wildcard $(addsuffix *.$(HEADEXT),$(addsuffix /, $(SRCDIRS)) ) )
+
 LANGUAGE         = CPP
 
 # Include the generic rules

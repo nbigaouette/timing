@@ -1,8 +1,9 @@
+LIB_OBJ          = $(filter-out $(build_dir)/Main.o, $(filter-out $(TEST_OBJ), $(OBJ) ) )
+
 ### Just build "full" and install
 .PHONY: f full
 f: full
-# Header library does not requires compilation.
-full: install_headers force
+full: install_shared install_static install_headers force
 
 .PHONY: shared lib_shared
 shared: lib_shared
@@ -69,17 +70,17 @@ INSTALL_EXEC := $(subst -D,,$(INSTALL_EXEC) )
 endif
 
 ### Add compiler to library directory, but only if not GCC
-DESTDIR_INC      = $(DESTDIR)/include
+DESTDIR_INC      = $(DESTDIR)/include/$(LIB)
 ifeq ($(DESTDIRCOMPILER),gcc)
 DESTDIR_LIB      = $(DESTDIR)/lib
 else
 DESTDIR_LIB     := $(DESTDIR)/lib/$(DESTDIRCOMPILER)
 endif
 
-HEADERS_NOTESTING=$(filter-out src/Version.hpp, $(filter-out $(wildcard testing/*.$(HEADEXT)), $(HEADERS) ) )
+#HEADERS_NOTESTING=$(filter-out src/Version.hpp, $(filter-out $(wildcard testing/*.$(HEADEXT)), $(HEADERS) ) )
+HEADERS_NOTESTING=$(filter-out , $(filter-out $(wildcard testing/*.$(HEADEXT)), $(HEADERS) ) )
 HEADERS_NOTESTING_NOSRC=$(subst src/,,$(HEADERS_NOTESTING) )
-HEADERS_NOTESTING_NOSRC_NOMEM=$(filter-out Constants.hpp, $(HEADERS_NOTESTING_NOSRC) )
-INSTALLED_HEADERS=$(addprefix $(DESTDIR)/include/, $(HEADERS_NOTESTING_NOSRC_NOMEM) )
+INSTALLED_HEADERS=$(addprefix $(DESTDIR)/include/$(LIB)/, $(HEADERS_NOTESTING_NOSRC) )
 ###############################################################
 
 
@@ -94,8 +95,8 @@ endif
 .PHONY: install
 install: $(TO_INSTALL)
 
-$(DESTDIR)/include:
-	mkdir -p $(DESTDIR)/include
+$(DESTDIR)/include/$(LIB):
+	mkdir -p $(DESTDIR)/include/$(LIB)
 $(DESTDIR_LIB):
 	mkdir -p $(DESTDIR_LIB)
 
@@ -119,7 +120,7 @@ $(DESTDIR_LIB)/lib$(LIB).so: $(build_dir)/lib$(LIB).so $(DESTDIR_LIB)
 
 .PHONY: install_headers install_headers_print install_headers_print_done
 ifeq ($(wildcard $(INSTALLED_HEADERS)),)
-install_headers_print: $(DESTDIR)/include
+install_headers_print: $(DESTDIR)/include/$(LIB)
 	############################################################
 	######## Installing library headers to $(DESTDIR_INC)... ###
 install_headers_print_done:
@@ -130,7 +131,7 @@ install_headers_print:
 install_headers_print_done:
 endif
 install_headers: install_headers_print $(INSTALLED_HEADERS) install_headers_print_done
-$(DESTDIR)/include/%.$(HEADEXT): src/%.$(HEADEXT) $(DESTDIR)/include
+$(DESTDIR)/include/$(LIB)/%.$(HEADEXT): src/%.$(HEADEXT) $(DESTDIR)/include
 	$(SUDO) $(INSTALL) $< $@
 
 .PHONY: uninstall
@@ -140,5 +141,12 @@ uninstall: force
 	$(SUDO) $(RM) $(DESTDIR_LIB)/lib$(LIB)*
 	######## Removing library headers from $(DESTDIR_INC)... ###
 	$(SUDO) $(RM) -r $(INSTALLED_HEADERS)
+
+
+# Library has no binary, but a test binary. Run it instead.
+.PHONY: r run
+r: run
+run: $(TEST_BIN)
+	$(SOFTLIMIT) ./$(TEST_BIN) $(NAME_ARGUMENT) $(INPUT_ARGUMENT) $(OTHER_ARGUMENT) $(UTF_ARGUMENT) 2>&1 | tee output/make_run.log
 
 ############ End of file ########################################

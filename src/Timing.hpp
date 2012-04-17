@@ -3,294 +3,165 @@
 
 #include <map>
 #include <string>
-
 #include <cstdio>
-#include <iostream>
 #include <cmath>
-#include <sstream>
+#include <time.h>  // timespec
+#include <sstream> // Defines also "timespec"
+#include <cassert>
 #include <stdint.h> // (u)int64_t
 
-#include <sys/time.h>
-typedef timeval Timeval;
-
+// log() is defined in StdCout.hpp
+// Not necessary though, it behaves the same as printf.
 #include <StdCout.hpp>
-
-
-namespace TimingNamespace
-{
-    template <class Double>
-    void Wait(const Double duration_sec)
-    {
-        Double delay = 0.0;
-        timeval initial, now;
-        gettimeofday(&initial, NULL);
-        while (delay <= duration_sec)
-        {
-            gettimeofday(&now, NULL);
-            // Transform time into double delay
-            delay = double(now.tv_sec - initial.tv_sec) + 1.0e-6*double(now.tv_usec - initial.tv_usec);
-            //printf("Delay = %.6f   max = %.6f\n", delay, duration_sec);
-        }
-    }
-}
-
-template <class Double>
-class Timing
-{
-    private:
-        bool    is_initialized;
-        Timeval time_info;      // Time information
-        Double  duration_sec;   // Duration [seconds]
-        Double  duration_usec;  // Duration [microseconds]
-
-    public:
-        // ******************************************************
-        Timing()
-        {
-            is_initialized = false;
-            duration_sec   = Double(0.0);
-            duration_usec  = Double(0.0);
-        }
-
-        // ******************************************************
-        void Reset_Duration()
-        {
-            duration_sec  = Double(0.0);
-            duration_usec = Double(0.0);
-            Reset_Timer();
-        }
-
-        // ******************************************************
-        void Reset_Timer()
-        {
-            is_initialized = true;
-            gettimeofday(&time_info, 0);
-        }
-
-        // ******************************************************
-        void Get_Elapsed_Time(Double &_duration_sec, Double &_duration_usec)
-        {
-            assert(is_initialized);
-
-            // Update current time information
-            timeval now;
-            gettimeofday(&now, 0);
-
-            // Store values
-            const time_t now_sec  = now.tv_sec;
-            const time_t now_usec = now.tv_usec;
-            const time_t pre_sec  = time_info.tv_sec;
-            const time_t pre_usec = time_info.tv_usec;
-
-            // Store new time information for latter use
-            gettimeofday(&time_info, 0);
-
-            // To prevent overflow when used with floats, do the subtraction
-            // separately for the seconds and the microseconds
-            _duration_sec  = Double(now_sec  - pre_sec);
-            _duration_usec = Double(now_usec - pre_usec);
-        }
-
-        // ******************************************************
-        void Update_Duration()
-        {
-            assert(is_initialized);
-
-            const Double old_duration_sec  = duration_sec;
-            const Double old_duration_usec = duration_usec;
-            Get_Elapsed_Time(duration_sec, duration_usec);
-            duration_sec  += old_duration_sec;
-            duration_usec += old_duration_usec;
-        }
-
-        // ******************************************************
-        void Update_Duration(Double elapsed_sec)
-        {
-            assert(is_initialized);
-
-            duration_sec += elapsed_sec;
-        }
-
-        // ******************************************************
-        Double Get_Duration()
-        {
-            return (duration_sec + duration_usec*Double(1.0e-6));
-        }
-
-        // ******************************************************
-        Double Calculate_Duration()
-        {
-            assert(is_initialized);
-
-            Timeval now;
-            gettimeofday(&now, 0);
-            return (Double(now.tv_sec - time_info.tv_sec) + Double(now.tv_usec - time_info.tv_usec)*Double(1.0e-6));
-        }
-};
-
-// Timing global variable
-#ifdef FLOATTYPE_SINGLE
-extern std::map<std::string, Timing<float> >  Timings;
-#else  // #ifdef FLOATTYPE_SINGLE
-extern std::map<std::string, Timing<double> > Timings;
-#endif // #ifdef FLOATTYPE_SINGLE
+#ifndef log
+#define log printf
+#endif // #ifndef log
 
 // **************************************************************
-template <class Double>
-std::string Get_Elapsed_Time_String(const Double seconds)
-{
-    std::string time("");
-    char buffer[200];
-
-    const Double min2sec  = 60.0;
-    const Double hour2min = 60.0;
-    const Double day2hour = 24.0;
-
-    Double secs_remaining = seconds;
-
-    const int nb_days = int(secs_remaining / (day2hour * hour2min * min2sec));
-    secs_remaining -= Double(nb_days) * (day2hour * hour2min * min2sec);
-
-    const int nb_hours = int(secs_remaining / (hour2min * min2sec));
-    secs_remaining -= Double(nb_hours) * (hour2min * min2sec);
-
-    const int nb_mins = int(secs_remaining / (min2sec));
-    secs_remaining -= Double(nb_mins) * (min2sec);
-
-    const int nb_secs = int(secs_remaining);
-
-    //sprintf(buffer, "%d days, %dh%.02d:%.02ds", nb_days, nb_hours, nb_mins, nb_secs);
-    if (nb_days != 0)
-    {
-        sprintf(buffer, "%d days, ", nb_days);
-        time += std::string(buffer);
-    }
-    if (nb_hours != 0 || nb_days != 0)
-    {
-        sprintf(buffer, "%dh", nb_hours);
-        time += std::string(buffer);
-    }
-    if (nb_mins != 0 || nb_days != 0 || nb_hours != 0)
-    {
-        sprintf(buffer, "%d:", nb_mins);
-        time += std::string(buffer);
-
-        sprintf(buffer, "%.02ds", nb_secs);
-    }
-    else
-        sprintf(buffer, "%ds", nb_secs);
-
-    time += std::string(buffer);
-
-    return time;
-}
-// **************************************************************
-template <class Integer>
-inline std::string Timing_IntToStr(const Integer integer, const int width = 0, const char fill = ' ')
-{
-    std::ostringstream MyStream;
-    if (width != 0)
-    {
-        //MyStream << std::setw(width);
-        //MyStream << std::setfill(fill);
-        MyStream.width(width);
-        MyStream.fill(fill);
-    }
-    MyStream << integer << std::flush;
-    return (MyStream.str());
-}
+// Define useful macros.
+// The two macros TIMER_START() and TIMER_STOP() can be used to
+// allow easy enabling/disabling of any timer measurement. Just
+// define "DISABLE_TIMING" before including Timing.hpp (either
+// with a #define or with -DDISABLE_TIMING CFLAG) and these macros
+// won't do anything, as will ETA class and timing::Print().
+#ifndef DISABLE_TIMING
+    #define TIMER_START(name, Timer_name) \
+        static timing::Timer &Timer_name = timing::New_Timer(name); \
+        Timer_name.Reset();
+    #define TIMER_STOP(name, Timer_name) \
+        Timer_name.Update();
+#else // #ifndef DISABLE_TIMING
+    #define TIMER_START(name, Timer_name) {}
+    #define TIMER_STOP(name, Timer_name)  {}
+#endif // #ifndef DISABLE_TIMING
 
 // **************************************************************
-inline std::string Format_Seconds_Human_Readable(const double s)
+namespace timing
 {
-    double tmp = s;
 
-    const unsigned int days = (unsigned int) std::floor(tmp / double(86400)); // 86400 seconds per day
-    tmp = std::max(0.0, tmp - double(days*86400));
-    const unsigned int hours = (unsigned int) std::floor(tmp / double(3600));  // 3600 seconds per hour
-    tmp = std::max(0.0, tmp - double(hours*3600));
-    const unsigned int minutes = (unsigned int) std::floor(tmp / double(60));    // 60 seconds per minute
-    tmp = std::max(0.0, tmp - double(minutes*60));
-    const unsigned int seconds = (unsigned int) tmp;
+    // **********************************************************
+    // See Git_Info.cpp (generated dynamically from Git_Info.cpp_template & Makefile.rules)
+    void Log_Git_Info(std::string basename = "");
 
-    std::string s_string;
-    if (days != 0)
-        s_string += Timing_IntToStr(days) + std::string("d");
-    if (hours != 0 or days != 0)
-        s_string += Timing_IntToStr(hours,2,'0') + std::string("h");
-    if (minutes != 0 or hours != 0 or days != 0)
-        s_string += Timing_IntToStr(minutes,2,'0') + std::string("m");
-    s_string += Timing_IntToStr(seconds,2,'0') + std::string("s");
+    // **********************************************************
+    const long TenToNine = 1000000000L; // 10^9
 
-    return s_string;
-}
+    const uint64_t years_to_days    = 365;
+    const uint64_t days_to_hours    = 24;
+    const uint64_t hours_to_min     = 60;
+    const uint64_t min_to_sec       = 60;
 
-// **************************************************************
-template <class Double>
-void Print_Timing_Info(const Double nt)
-{
-    const std::string s("                   ");
-    bool total_found = false;
-    std::string total_key;
+    const uint64_t years_to_hours   = years_to_days * days_to_hours;
+    const uint64_t years_to_min     = years_to_days * days_to_hours * hours_to_min;
+    const uint64_t years_to_sec     = years_to_days * days_to_hours * hours_to_min * min_to_sec;
 
-    for (typename std::map<std::string, Timing<Double> >::iterator it = Timings.begin() ; it != Timings.end(); it++ )
+    const uint64_t days_to_min      = days_to_hours * hours_to_min;
+    const uint64_t days_to_sec      = days_to_hours * hours_to_min * min_to_sec;
+
+    const uint64_t hours_to_sec     = hours_to_min * min_to_sec;
+
+    const double sec_to_nanosec     = 1.0e9;
+    const double nanosec_to_sec     = 1.0 / sec_to_nanosec;
+
+    // **********************************************************
+    class Clock
     {
-        if (it->first == "Total" || it->first == "total")
+        private:
+            timespec timer;
+
+        public:
+
+            time_t Get_sec()  const;
+            long   Get_nsec() const;
+
+            Clock();
+            void Clear();
+
+            Clock operator+(const Clock &other);
+            Clock operator-(const Clock &other);
+            void Add_sec(time_t seconds);
+            void Add_nsec(long nanseconds);
+            void Get_Current_Time();
+            void Print() const;
+    };
+
+    // **********************************************************
+    class Timer
+    {
+        private:
+            bool    is_initialized;
+            Clock start;
+            Clock end;
+            Clock duration;
+
+        public:
+            Timer();
+            bool Is_Initialized() { return is_initialized; }
+            void Reset_Duration();
+            void Reset();
+            void Update();
+            void Add_Seconds(const double seconds);
+            time_t Get_Duration_Seconds();
+            long Get_Duration_NanoSeconds();
+            double Get_Duration();
+            double Calculate_Duration();
+            uint64_t Duration_Years();
+            uint64_t Duration_Days();
+            uint64_t Duration_Hours();
+            uint64_t Duration_Minutes();
+            uint64_t Duration_Seconds();
+            std::string Duration_Human_Readable();
+            void Print() const;
+    };
+
+    // **********************************************************
+    Timer & New_Timer(const std::string &name);
+    void Wait(const double seconds);
+    void Print_N_Times(const std::string x, const size_t N, const bool newline = true);
+    void _Print(const double nt);
+#ifndef DISABLE_TIMING
+    inline void Print(const double nt)  { _Print(nt);               }
+#else // #ifndef DISABLE_TIMING
+    inline void Print(const double nt)  { /* Don't do anything */   }
+#endif // #ifndef DISABLE_TIMING
+
+    // **********************************************************
+    template <class Integer>
+    std::string IntToStr(const Integer integer, const int width = 0, const char fill = ' ')
+    {
+        std::ostringstream MyStream;
+        if (width != 0)
         {
-            total_found = true;
-            total_key = it->first;
+            //MyStream << std::setw(width);
+            //MyStream << std::setfill(fill);
+            MyStream.width(width);
+            MyStream.fill(fill);
         }
+        MyStream << integer << std::flush;
+        return (MyStream.str());
     }
 
-    std_cout
-        << s << "_______________________________________________________________________\n"
-        << s << "|                  Timing of different code aspects                   |\n"
-        << s << "|---------------------------------------------------------------------|\n"
-        << s << "|       Code Aspect         |          Duration          | Percentage |\n"
-        << s << "|                           |  seconds   | per time step | over total |\n"
-        << s << "|---------------------------|------------|---------------|------------|\n";
-    for (typename std::map<std::string, Timing<Double> >::iterator it = Timings.begin() ; it != Timings.end(); it++ )
+    // **********************************************************
+    class Eta
     {
-        if (it->first != total_key)
-        {
-            std_cout << s << "| ";
-                std_cout.Format(25, 0, 's', 'l'); std_cout << it->first << " | ";
-                std_cout.Format(10, 5, 'g'); std_cout << Timings[it->first].Get_Duration() << " | ";
-                std_cout.Format(13, 6, 'g'); std_cout << Timings[it->first].Get_Duration() / nt << " | ";
-                if (total_found)
-                {
-                    std_cout.Format(10, 2, 'f'); std_cout << (Timings[it->first].Get_Duration() / Timings[total_key].Get_Duration())*100.0 << " |\n";
-                }
-                else
-                    std_cout << "     -    " << " |\n";
-        }
-    }
-    if (total_found)
-    {
-        std_cout << s << "| ";
-            std_cout.Format(25, 0, 's', 'l'); std_cout << total_key << " | ";
-            std_cout.Format(10, 5, 'g'); std_cout << Timings[total_key].Get_Duration() << " | ";
-            std_cout.Format(13, 6, 'g'); std_cout << Timings[total_key].Get_Duration() / nt << " | ";
-            std_cout.Format(10, 2, 'f'); std_cout << (Timings[total_key].Get_Duration() / Timings[total_key].Get_Duration())*100.0 << " |\n";
-    }
-    std_cout
-        << s << "|---------------------------|-----------------------------------------|\n"
-        << s << "| Total (human readable):   | ";
-            std_cout.Format(39, 0, 's'); std_cout << Format_Seconds_Human_Readable(Timings[total_key].Get_Duration()) << " |\n"
-        << s << "|---------------------------------------------------------------------|\n"
-        << "\n";
+        private:
+            double first_time;
+            double duration;
+            Timer *Timer_Total_Ptr;
 
+            std::string _Get_ETA(const double time) const;
 
-    time_t rawtime;
-    time(&rawtime);
-    const int timing_max_string_size = 1000;
-    char date_out[timing_max_string_size];      // Output string
-    struct tm *date_format; // Saves in Date format
-    date_format = localtime(&rawtime);
-    strftime(date_out, timing_max_string_size, "%A, %B %dth %Y, %Hh%M:%S (%Y%m%d%H%M%S)", date_format);
-    std_cout << "\nEnding time and date:\n    " << date_out << std::endl << std::endl;
-}
-
+        public:
+            void Init(const double _first_time, const double _duration);
+#ifndef DISABLE_TIMING
+            Eta(const double _first_time, const double _duration)   { Init(_first_time, _duration); }
+            std::string Get_ETA(const double time) const            { return _Get_ETA(time);        }
+#else // #ifndef DISABLE_TIMING
+            Eta(const double _first_time, const double _duration)   { /* Don't init anything */     }
+            std::string Get_ETA(const double time) const            { return std::string("-");      }
+#endif // #ifndef DISABLE_TIMING
+    };
+} // namespace timing
 
 #endif // #ifndef _INC_TIMING_hpp
 
