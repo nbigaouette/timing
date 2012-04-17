@@ -129,6 +129,7 @@ void Timing::Add_Seconds(const double seconds)
     long nanoseconds = long((seconds - double(nb_seconds)) * sec_to_nanosec);
     end.Add_sec(nb_seconds);
     end.Add_nsec(nanoseconds);
+    duration = end - start;
 }
 
 // **************************************************************
