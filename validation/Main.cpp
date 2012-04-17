@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
     const double duration = double(100*N);
     const double time = 0.0;
-    Eta ETA = Eta(time, duration);
+    Eta ETA(time, duration);
     std::cout << "ETA: for 100xN = " << 100*N << " iterations: " << ETA.Get_ETA(0.1*duration) << "\n";
     std::cout << "&Timing_Total = " << &Timing_Total << "\n";
 
