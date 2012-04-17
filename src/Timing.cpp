@@ -362,7 +362,6 @@ namespace timing
         std::string timer_name_w_spaces("");
         timer_name_w_spaces = timer_name;
         timer_name_w_spaces.resize(longest_length, ' ');
-//         log("%s| %-25s | %10.5g | %13.6g | ", s.c_str(), timer_name.c_str(), TimersMap[timer_name].Get_Duration(), TimersMap[timer_name].Get_Duration() / nt);
 
         log("%s|", s.c_str());
         log(" %s ", timer_name_w_spaces.c_str());
