@@ -347,12 +347,6 @@ namespace timing
         // ETA: Estimated Time of Arrival (s)
         const double eta = std::max(0.0, (duration - first_time) * Timings["Total"].Calculate_Duration() / (time - first_time) - Timings["Total"].Calculate_Duration());
 
-        std_cout << "Calculate_ETA()  Timings[\"Total\"].Calculate_Duration() = " << Timings["Total"].Calculate_Duration() << "\n";
-        std_cout << "Calculate_ETA()  first_time = " << first_time << "\n";
-        std_cout << "Calculate_ETA()  time = " << time << "\n";
-        std_cout << "Calculate_ETA()  duration = " << duration << "\n";
-        std_cout << "Calculate_ETA()  eta = " << eta << "\n";
-
         Timing tmp;
         tmp.Add_Seconds(eta);
 
