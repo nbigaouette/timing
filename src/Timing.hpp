@@ -10,9 +10,13 @@
 #include <cassert>
 #include <stdint.h> // (u)int64_t
 
-// log() is defined in StdCout.hpp
-// Not necessary though, it behaves the same as printf.
+// See https://github.com/nbigaouette/stdcout if wanted.
+#ifdef USE_STDCOUT
 #include <StdCout.hpp>
+#endif // #ifdef USE_STDCOUT
+
+// If log() is not defined (StdCout.hpp was not included),
+// just define log() as being printf().
 #ifndef log
 #define log printf
 #endif // #ifndef log
