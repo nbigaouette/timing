@@ -350,7 +350,7 @@ namespace timing
         }
 
         log("%s_______________________________________________________________________\n", s.c_str());
-        log("%s|                  Timer of different code aspects                   |\n", s.c_str());
+        log("%s|                  Timing of different code aspects                   |\n", s.c_str());
         log("%s|---------------------------------------------------------------------|\n", s.c_str());
         log("%s|       Code Aspect         |          Duration          | Percentage |\n", s.c_str());
         log("%s|                           |  seconds   | per time step | over total |\n", s.c_str());
