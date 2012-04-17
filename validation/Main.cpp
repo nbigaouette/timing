@@ -31,12 +31,14 @@ int main(int argc, char *argv[])
     std::cout << "std::numeric_limits<time_t>::min() = " << std::numeric_limits<time_t>::min() << "\n";
     std::cout << "std::numeric_limits<long>::min()   = " << std::numeric_limits<long>::min() << "\n";
 
+    const uint64_t N = 500000000;
+    timing::Calculate_ETA(0, double(10*N));
+
     Timings["Total"].Reset_Timer();
 
     Timings["Test1"].Reset_Timer();
     int itemp = 0;
-    const int N = 500000000;
-    for (int i = 0; i< N; i++)
+    for (uint64_t i = 0 ; i < N ; i++)
         itemp += itemp;
     Timings["Test1"].Update_Duration();
 
@@ -45,6 +47,9 @@ int main(int argc, char *argv[])
     Timings["Wait"].Update_Duration();
 
     Timings["Total"].Update_Duration();
+
+    // Bogus ETA
+    std::cout << "ETA: for 100xN = " << 10*N << " iterations: " << timing::Calculate_ETA(double(N), double(10*N)) << "\n";
 
     timing::Print_Timing_Info(double(N));
 
