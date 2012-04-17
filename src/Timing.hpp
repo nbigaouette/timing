@@ -69,6 +69,8 @@ public:
 
     Timer operator+(const Timer &other);
     Timer operator-(const Timer &other);
+    void Add_sec(time_t seconds);
+    void Add_nsec(long nanseconds);
     void Get_Current_Time();
 };
 

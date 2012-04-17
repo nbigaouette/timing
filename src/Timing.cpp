@@ -69,6 +69,18 @@ Timer Timer::operator-(const Timer &other)
 }
 
 // **************************************************************
+void Timer::Add_sec(time_t seconds)
+{
+    timer.tv_sec += seconds;
+}
+
+// **************************************************************
+void Timer::Add_nsec(long nanoseconds)
+{
+    timer.tv_nsec += nanoseconds;
+}
+
+// **************************************************************
 void Timer::Get_Current_Time()
 {
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &(this->timer));
