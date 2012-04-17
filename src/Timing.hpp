@@ -21,6 +21,10 @@
 // **************************************************************
 namespace timing
 {
+    // See Git_Info.cpp (generated dynamically from Git_Info.cpp_template & Makefile.rules)
+    void Log_Git_Info(std::string basename = "");
+
+    // **********************************************************
     const long TenToNine = 1000000000L; // 10^9
 
     const uint64_t years_to_days    = 365;
@@ -39,69 +43,63 @@ namespace timing
 
     const double sec_to_nanosec     = 1.0e9;
     const double nanosec_to_sec     = 1.0 / sec_to_nanosec;
-}
 
-// **************************************************************
-class Clock
-{
-private:
-    timespec timer;
+    // **********************************************************
+    class Clock
+    {
+        private:
+            timespec timer;
 
-public:
+        public:
 
-    time_t Get_sec()  const;
-    long   Get_nsec() const;
+            time_t Get_sec()  const;
+            long   Get_nsec() const;
 
-    Clock();
-    void Clear();
+            Clock();
+            void Clear();
 
-    Clock operator+(const Clock &other);
-    Clock operator-(const Clock &other);
-    void Add_sec(time_t seconds);
-    void Add_nsec(long nanseconds);
-    void Get_Current_Time();
-    void Print() const;
-};
+            Clock operator+(const Clock &other);
+            Clock operator-(const Clock &other);
+            void Add_sec(time_t seconds);
+            void Add_nsec(long nanseconds);
+            void Get_Current_Time();
+            void Print() const;
+    };
 
-// **************************************************************
-class Timer
-{
-    private:
-        bool    is_initialized;
-        Clock start;
-        Clock end;
-        Clock duration;
+    // **********************************************************
+    class Timer
+    {
+        private:
+            bool    is_initialized;
+            Clock start;
+            Clock end;
+            Clock duration;
 
-    public:
-        Timer();
-        void Reset_Duration();
-        void Reset();
-        void Update();
-        void Add_Seconds(const double seconds);
-        time_t Get_Duration_Seconds();
-        long Get_Duration_NanoSeconds();
-        double Get_Duration();
-        double Calculate_Duration();
-        uint64_t Duration_Years();
-        uint64_t Duration_Days();
-        uint64_t Duration_Hours();
-        uint64_t Duration_Minutes();
-        uint64_t Duration_Seconds();
-        std::string Duration_Human_Readable();
-        void Print() const;
-};
+        public:
+            Timer();
+            void Reset_Duration();
+            void Reset();
+            void Update();
+            void Add_Seconds(const double seconds);
+            time_t Get_Duration_Seconds();
+            long Get_Duration_NanoSeconds();
+            double Get_Duration();
+            double Calculate_Duration();
+            uint64_t Duration_Years();
+            uint64_t Duration_Days();
+            uint64_t Duration_Hours();
+            uint64_t Duration_Minutes();
+            uint64_t Duration_Seconds();
+            std::string Duration_Human_Readable();
+            void Print() const;
+    };
 
-namespace timing
-{
-    // **************************************************************
+    // **********************************************************
     Timer & New_Timer(const std::string name);
     void Wait(const double seconds);
     void Print_Timing_Info(const double nt);
 
-    // See Git_Info.cpp (generated dynamically from Git_Info.cpp_template & Makefile.rules)
-    void Log_Git_Info(std::string basename = "");
-
-    // **************************************************************
+    // **********************************************************
     template <class Integer>
     std::string IntToStr(const Integer integer, const int width = 0, const char fill = ' ')
     {
@@ -117,7 +115,7 @@ namespace timing
         return (MyStream.str());
     }
 
-    // **************************************************************
+    // **********************************************************
     class Eta
     {
         private:
@@ -129,7 +127,7 @@ namespace timing
             Eta(const double _first_time, const double _duration);
             std::string Get_ETA(const double time) const;
     };
-}
+} // namespace timing
 
 #endif // #ifndef _INC_TIMING_hpp
 
