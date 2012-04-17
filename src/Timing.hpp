@@ -17,6 +17,18 @@
 #define log printf
 #endif // #ifndef log
 
+// **************************************************************
+// Define useful macros
+#ifdef TIMING
+    #define TIMER_START(name, Timer_name) \
+        static timing::Timer &Timer_name = timing::New_Timer(name); \
+        Timer_name.Reset();
+    #define TIMER_STOP(name, Timer_name) \
+        Timer_name.Update();
+#else
+    #define TIMER_START(name, Timer_name) {}
+    #define TIMER_STOP(name, Timer_name)  {}
+#endif // #ifdef TIMING
 
 // **************************************************************
 namespace timing
