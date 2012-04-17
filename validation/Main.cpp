@@ -32,8 +32,7 @@ int main(int argc, char *argv[])
 
     const uint64_t N = 500000000;
 
-    static timing::Timer &Timing_Total = timing::New_Timer("Total");
-    Timing_Total.Reset();
+    TIMER_START("Total", Timing_Total);
 
     TIMER_START("Test1", Timing_Test1);
     int itemp = 0;
@@ -43,8 +42,9 @@ int main(int argc, char *argv[])
 
     TIMER_START("Wait", Timing_Wait);
     timing::Wait(1.0);
+    TIMER_STOP("Wait", Timing_Wait);
 
-    Timing_Total.Update();
+    TIMER_STOP("Total", Timing_Total);
 
     const double duration = double(100*N);
     const double time = 0.0;
