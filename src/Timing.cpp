@@ -84,7 +84,12 @@ void Timer::Get_Current_Time()
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &(this->timer));
 }
 
-
+// **************************************************************
+void Timer::Print() const
+{
+    log("  sec:  %ld\n", timer.tv_sec);
+    log("  nsec: %ld\n", timer.tv_nsec);
+}
 
 // **************************************************************
 Timing::Timing()
@@ -255,6 +260,17 @@ std::string Timing::Duration_Human_Readable()
 }
 
 // **************************************************************
+void Timing::Print() const
+{
+    log("Timing::Print()   %p\n", (void *)this);
+    log("  Start:\n");
+    start.Print();
+    log("  End:\n");
+    end.Print();
+    log("  Duration:\n");
+    duration.Print();
+}
+
 namespace timing
 {
     // **********************************************************

@@ -72,6 +72,7 @@ public:
     void Add_sec(time_t seconds);
     void Add_nsec(long nanseconds);
     void Get_Current_Time();
+    void Print() const;
 };
 
 // **************************************************************
@@ -99,7 +100,7 @@ class Timing
         uint64_t Duration_Minutes();
         uint64_t Duration_Seconds();
         std::string Duration_Human_Readable();
-        void Print();
+        void Print() const;
 };
 
 namespace timing
