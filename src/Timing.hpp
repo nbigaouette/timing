@@ -76,7 +76,7 @@ class Timer
         Timer();
         void Reset_Duration();
         void Reset();
-        void Update_Duration();
+        void Update();
         void Add_Seconds(const double seconds);
         time_t Get_Duration_Seconds();
         long Get_Duration_NanoSeconds();

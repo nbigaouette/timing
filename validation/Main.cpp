@@ -40,14 +40,14 @@ int main(int argc, char *argv[])
     int itemp = 0;
     for (uint64_t i = 0 ; i < N ; i++)
         itemp += itemp;
-    Timing_Test1.Update_Duration();
+    Timing_Test1.Update();
 
     static Timer &Timing_Wait = timing::New_Timer("Wait");
     Timing_Wait.Reset();
     timing::Wait(1.0);
-    Timing_Wait.Update_Duration();
+    Timing_Wait.Update();
 
-    Timing_Total.Update_Duration();
+    Timing_Total.Update();
 
     const double duration = double(100*N);
     const double time = 0.0;

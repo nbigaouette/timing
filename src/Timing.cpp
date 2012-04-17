@@ -114,7 +114,7 @@ void Timer::Reset()
 }
 
 // **************************************************************
-void Timer::Update_Duration()
+void Timer::Update()
 {
     assert(is_initialized);
 
