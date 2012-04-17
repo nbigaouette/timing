@@ -358,7 +358,7 @@ namespace timing
     // **********************************************************
     void Print_Code_Aspect(const std::string &s, const std::string &timer_name,
                            const size_t longest_length, const std::string &total_key,
-                           const double nt, const bool total_found)
+                           const uint64_t nt, const bool total_found)
     {
         std::string timer_name_w_spaces("");
         timer_name_w_spaces = timer_name;
@@ -366,7 +366,7 @@ namespace timing
 
         log("%s|", s.c_str());
         log(" %s ", timer_name_w_spaces.c_str());
-        log("| %10.5g | %13.6g | ", TimersMap[timer_name].Get_Duration(), TimersMap[timer_name].Get_Duration() / nt);
+        log("| %10.5g | %13.6g | ", TimersMap[timer_name].Get_Duration(), TimersMap[timer_name].Get_Duration() / double(nt));
 
         if (total_found)
         {
@@ -377,7 +377,11 @@ namespace timing
     }
 
     // **********************************************************
-    void _Print(const double nt)
+    void _Print(const uint64_t nt)
+    /**
+     *
+     *  @param  nt  Number of time steps (iterations) done in the main program.
+     */
     {
         bool total_found = false;
         std::string total_name;

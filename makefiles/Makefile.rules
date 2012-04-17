@@ -308,7 +308,15 @@ GIT_BRANCH := $(shell $(GIT) branch --no-color| $(GREP) "*" | $(SED) "s|* ||g")
 .PHONY: git_info
 git_info: src/Git_Info.cpp
 src/Git_Info.cpp: force
-	$(ECHO) "#include <StdCout.hpp>" > src/Git_Info.cpp
+	$(ECHO) "#ifdef USE_STDCOUT" > src/Git_Info.cpp
+	$(ECHO) "#include <StdCout.hpp>" >> src/Git_Info.cpp
+	$(ECHO) "#endif // #ifdef USE_STDCOUT" >> src/Git_Info.cpp
+	$(ECHO) "#include <string>" >> src/Git_Info.cpp
+	$(ECHO) "#include <iostream>" >> src/Git_Info.cpp
+	$(ECHO) "#include <fstream>" >> src/Git_Info.cpp
+	$(ECHO) "#ifndef std_cout" >> src/Git_Info.cpp
+	$(ECHO) "#define std_cout std::cout" >> src/Git_Info.cpp
+	$(ECHO) "#endif // #ifndef std_cout" >> src/Git_Info.cpp
 	$(ECHO) -e "namespace $(LIB)\n{" >> src/Git_Info.cpp
 	$(ECHO) "    const char *git_build_sha = \"`$(GIT) rev-parse HEAD`\";" >> src/Git_Info.cpp
 	$(ECHO) "    const char *git_build_branch = \"$(GIT_BRANCH)\";" >> src/Git_Info.cpp
