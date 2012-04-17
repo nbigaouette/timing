@@ -355,40 +355,40 @@ namespace timing
         log("\nEnding time and date:\n    %s\n", date_out);
     }
 
-}
 
-// **************************************************************
-Eta::Eta(const double _first_time, const double _duration)
-{
-    first_time       = _first_time;
-    duration         = _duration;
-    Timing_Total_Ptr = &timing::TimingsMap["Total"];
-}
-
-// **************************************************************
-std::string Eta::Get_ETA(const double time) const
-{
-    std::string eta_string("");
-
-    // Wait 0.5% before calculating an ETA to let the simulation stabilize.
-    if ((time - first_time)/duration < 5.0e-3)
+    // **********************************************************
+    Eta::Eta(const double _first_time, const double _duration)
     {
-        eta_string = "-";
-    }
-    else
-    {
-        assert(Timing_Total_Ptr != NULL);
-
-        // ETA: Estimated Time of Arrival (s)
-        const double eta = std::max(0.0, (duration - first_time) * Timing_Total_Ptr->Calculate_Duration() / (time - first_time) - Timing_Total_Ptr->Calculate_Duration());
-
-        Timing tmp;
-        tmp.Add_Seconds(eta);
-
-        eta_string = tmp.Duration_Human_Readable();
+        first_time       = _first_time;
+        duration         = _duration;
+        Timing_Total_Ptr = &timing::TimingsMap["Total"];
     }
 
-    return eta_string;
+    // **********************************************************
+    std::string Eta::Get_ETA(const double time) const
+    {
+        std::string eta_string("");
+
+        // Wait 0.5% before calculating an ETA to let the simulation stabilize.
+        if ((time - first_time)/duration < 5.0e-3)
+        {
+            eta_string = "-";
+        }
+        else
+        {
+            assert(Timing_Total_Ptr != NULL);
+
+            // ETA: Estimated Time of Arrival (s)
+            const double eta = std::max(0.0, (duration - first_time) * Timing_Total_Ptr->Calculate_Duration() / (time - first_time) - Timing_Total_Ptr->Calculate_Duration());
+
+            Timing tmp;
+            tmp.Add_Seconds(eta);
+
+            eta_string = tmp.Duration_Human_Readable();
+        }
+
+        return eta_string;
+    }
 }
 
 // ********** End of file ***************************************

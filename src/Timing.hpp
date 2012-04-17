@@ -93,19 +93,6 @@ class Timing
         void Print() const;
 };
 
-// ******************************************************************
-class Eta
-{
-    private:
-        double first_time;
-        double duration;
-        Timing *Timing_Total_Ptr;
-
-    public:
-        Eta(const double _first_time, const double _duration);
-        std::string Get_ETA(const double time) const;
-};
-
 namespace timing
 {
     // **************************************************************
@@ -131,6 +118,19 @@ namespace timing
         MyStream << integer << std::flush;
         return (MyStream.str());
     }
+
+    // **************************************************************
+    class Eta
+    {
+        private:
+            double first_time;
+            double duration;
+            Timing *Timing_Total_Ptr;
+
+        public:
+            Eta(const double _first_time, const double _duration);
+            std::string Get_ETA(const double time) const;
+    };
 }
 
 #endif // #ifndef _INC_TIMING_hpp
