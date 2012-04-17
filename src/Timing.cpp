@@ -130,7 +130,7 @@ namespace timing
         assert(is_initialized);
 
         end.Get_Current_Time();
-        duration = duration + (end - start);
+        duration = end - start;
     }
 
     // **********************************************************
