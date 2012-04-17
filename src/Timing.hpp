@@ -75,7 +75,7 @@ class Timer
     public:
         Timer();
         void Reset_Duration();
-        void Reset_Timer();
+        void Reset();
         void Update_Duration();
         void Add_Seconds(const double seconds);
         time_t Get_Duration_Seconds();

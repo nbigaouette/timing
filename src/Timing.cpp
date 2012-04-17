@@ -103,11 +103,11 @@ void Timer::Reset_Duration()
     start.Clear();
     end.Clear();
     duration.Clear();
-    Reset_Timer();
+    Reset();
 }
 
 // **************************************************************
-void Timer::Reset_Timer()
+void Timer::Reset()
 {
     is_initialized = true;
     start.Get_Current_Time();
