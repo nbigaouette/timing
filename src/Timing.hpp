@@ -99,14 +99,15 @@ class Timing
         uint64_t Duration_Minutes();
         uint64_t Duration_Seconds();
         std::string Duration_Human_Readable();
+        void Print();
 };
 
 namespace timing
 {
     // **************************************************************
     void Wait(const double seconds);
-
     void Print_Timing_Info(const double nt);
+    std::string Calculate_ETA(const double time, const double duration);
 
     // **************************************************************
     template <class Integer>

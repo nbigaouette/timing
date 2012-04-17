@@ -331,6 +331,34 @@ namespace timing
         strftime(date_out, timing_max_string_size, "%A, %B %dth %Y, %Hh%M:%S (%Y%m%d%H%M%S)", date_format);
         log("\nEnding time and date:\n    %s\n", date_out);
     }
+
+    // **********************************************************
+    std::string Calculate_ETA(const double time, const double duration)
+    {
+        // Keep track of the first time used in the first call and scale the time
+        // used in the ETA calculation. This allows a good ETA estimate even if reloading
+        // a simulation from a snapshot.
+        static double first_time = time;
+
+        if (time < 1.0e-20)
+            return std::string("-");
+
+        // ETA: Estimated Time of Arrival (s)
+        const double eta = std::max(0.0, (duration - first_time) * Timings["Total"].Calculate_Duration() / (time - first_time) - Timings["Total"].Calculate_Duration());
+
+        std_cout << "Calculate_ETA()  Timings[\"Total\"].Calculate_Duration() = " << Timings["Total"].Calculate_Duration() << "\n";
+        std_cout << "Calculate_ETA()  first_time = " << first_time << "\n";
+        std_cout << "Calculate_ETA()  time = " << time << "\n";
+        std_cout << "Calculate_ETA()  duration = " << duration << "\n";
+        std_cout << "Calculate_ETA()  eta = " << eta << "\n";
+
+        Timing tmp;
+        tmp.Add_Seconds(eta);
+
+        tmp.Print();
+
+        return tmp.Duration_Human_Readable();
+    }
 }
 
 // ********** End of file ***************************************
