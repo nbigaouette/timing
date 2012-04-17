@@ -42,15 +42,6 @@ namespace timing
 
     const double sec_to_nanosec     = 1.0e9;
     const double nanosec_to_sec     = 1.0 / sec_to_nanosec;
-
-    // See Git_Info.cpp (generated dynamically from Git_Info.cpp_template & Makefile.rules)
-    void Log_Git_Info(std::string basename = "");
-
-    // Forward declaration
-    void Wait(const double duration_sec);
-
-    template <class Integer>
-    std::string IntToStr(const Integer integer, const int width = 0, const char fill = ' ');
 }
 
 // **************************************************************
@@ -109,6 +100,9 @@ namespace timing
     void Wait(const double seconds);
     void Print_Timing_Info(const double nt);
     std::string Calculate_ETA(const double time, const double duration);
+
+    // See Git_Info.cpp (generated dynamically from Git_Info.cpp_template & Makefile.rules)
+    void Log_Git_Info(std::string basename = "");
 
     // **************************************************************
     template <class Integer>
