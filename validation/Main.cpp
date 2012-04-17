@@ -35,17 +35,14 @@ int main(int argc, char *argv[])
     static timing::Timer &Timing_Total = timing::New_Timer("Total");
     Timing_Total.Reset();
 
-    static timing::Timer &Timing_Test1 = timing::New_Timer("Test1");
-    Timing_Test1.Reset();
+    TIMER_START("Test1", Timing_Test1);
     int itemp = 0;
     for (uint64_t i = 0 ; i < N ; i++)
         itemp += itemp;
-    Timing_Test1.Update();
+    TIMER_STOP("Test1", Timing_Test1);
 
-    static timing::Timer &Timing_Wait = timing::New_Timer("Wait");
-    Timing_Wait.Reset();
+    TIMER_START("Wait", Timing_Wait);
     timing::Wait(1.0);
-    Timing_Wait.Update();
 
     Timing_Total.Update();
 
