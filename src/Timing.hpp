@@ -93,13 +93,25 @@ class Timing
         void Print() const;
 };
 
+// ******************************************************************
+class Eta
+{
+    private:
+        double first_time;
+        double duration;
+        Timing *Timing_Total_Ptr;
+
+    public:
+        Eta(const double _first_time, const double _duration);
+        std::string Get_ETA(const double time) const;
+};
+
 namespace timing
 {
     // **************************************************************
     Timing & New_Timer(const std::string name);
     void Wait(const double seconds);
     void Print_Timing_Info(const double nt);
-    std::string Calculate_ETA(const double time, const double duration);
 
     // See Git_Info.cpp (generated dynamically from Git_Info.cpp_template & Makefile.rules)
     void Log_Git_Info(std::string basename = "");

@@ -35,9 +35,6 @@ int main(int argc, char *argv[])
     static Timing &Timing_Total = timing::New_Timer("Total");
     Timing_Total.Reset_Timer();
 
-    // timing::Calculate_ETA() must be called at least once before it can return something useful.
-    timing::Calculate_ETA(0, double(10*N));
-
     static Timing &Timing_Test1 = timing::New_Timer("Test1");
     Timing_Test1.Reset_Timer();
     int itemp = 0;
@@ -52,8 +49,11 @@ int main(int argc, char *argv[])
 
     Timing_Total.Update_Duration();
 
-    // Bogus ETA
-    std::cout << "ETA: for 100xN = " << 100*N << " iterations: " << timing::Calculate_ETA(double(N), double(100*N)) << "\n";
+    const double duration = double(100*N);
+    const double time = 0.0;
+    Eta ETA = Eta(time, duration);
+    std::cout << "ETA: for 100xN = " << 100*N << " iterations: " << ETA.Get_ETA(0.1*duration) << "\n";
+    std::cout << "&Timing_Total = " << &Timing_Total << "\n";
 
     timing::Print_Timing_Info(double(N));
 

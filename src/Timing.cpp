@@ -355,27 +355,40 @@ namespace timing
         log("\nEnding time and date:\n    %s\n", date_out);
     }
 
-    // **********************************************************
-    std::string Calculate_ETA(const double time, const double duration)
-    {
-        // Keep track of the first time used in the first call and scale the time
-        // used in the ETA calculation. This allows a good ETA estimate even if reloading
-        // a simulation from a snapshot.
-        static double first_time = time;
+}
 
-        // Wait 0.5% before calculating an ETA to let the simulation stabilize.
-        if ((time - first_time)/duration < 5.0e-3)
-            return std::string("-");
+// **************************************************************
+Eta::Eta(const double _first_time, const double _duration)
+{
+    first_time       = _first_time;
+    duration         = _duration;
+    Timing_Total_Ptr = &timing::TimingsMap["Total"];
+}
+
+// **************************************************************
+std::string Eta::Get_ETA(const double time) const
+{
+    std::string eta_string("");
+
+    // Wait 0.5% before calculating an ETA to let the simulation stabilize.
+    if ((time - first_time)/duration < 5.0e-3)
+    {
+        eta_string = "-";
+    }
+    else
+    {
+        assert(Timing_Total_Ptr != NULL);
 
         // ETA: Estimated Time of Arrival (s)
-        static Timing &Timing_Total = TimingsMap["Total"];
-        const double eta = std::max(0.0, (duration - first_time) * Timing_Total.Calculate_Duration() / (time - first_time) - Timing_Total.Calculate_Duration());
+        const double eta = std::max(0.0, (duration - first_time) * Timing_Total_Ptr->Calculate_Duration() / (time - first_time) - Timing_Total_Ptr->Calculate_Duration());
 
         Timing tmp;
         tmp.Add_Seconds(eta);
 
-        return tmp.Duration_Human_Readable();
+        eta_string = tmp.Duration_Human_Readable();
     }
+
+    return eta_string;
 }
 
 // ********** End of file ***************************************
