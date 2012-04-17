@@ -40,8 +40,8 @@ namespace timing
 
     const uint64_t hours_to_sec     = hours_to_min * min_to_sec;
 
-    const double nanosec_to_sec     = 1.0e9;
-    const double sec_to_nanosec     = 1.0 / nanosec_to_sec;
+    const double sec_to_nanosec     = 1.0e9;
+    const double nanosec_to_sec     = 1.0 / sec_to_nanosec;
 
     // See Git_Info.cpp (generated dynamically from Git_Info.cpp_template & Makefile.rules)
     void Log_Git_Info(std::string basename = "");
