@@ -311,7 +311,8 @@ namespace timing
             else
             {
                 // ETA: Estimated Time of Arrival (s)
-                const double eta = std::max(0.0, (duration - first_time) * Timer_Total_Ptr->Calculate_Duration() / (time - first_time) - Timer_Total_Ptr->Calculate_Duration());
+                const double elapsed_time = Timer_Total_Ptr->Calculate_Duration();
+                const double eta = std::max(0.0, ((duration - first_time) / (time - first_time) - 1.0) * elapsed_time);
 
                 Timer tmp;
                 tmp.Add_Seconds(eta);
