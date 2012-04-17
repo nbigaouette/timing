@@ -11,6 +11,7 @@
 #include <stdint.h> // (u)int64_t
 
 // log() is defined in StdCout.hpp
+// Not necessary though, it behaves the same as printf.
 #include <StdCout.hpp>
 #ifndef log
 #define log printf
