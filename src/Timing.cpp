@@ -10,7 +10,7 @@ namespace timing
     std::map<std::string, Timer> TimersMap;
 
     // **********************************************************
-    Timer & New_Timer(const std::string name)
+    Timer & New_Timer(const std::string &name)
     {
         return TimersMap[name];
     }

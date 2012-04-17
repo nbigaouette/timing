@@ -95,7 +95,7 @@ namespace timing
     };
 
     // **********************************************************
-    Timer & New_Timer(const std::string name);
+    Timer & New_Timer(const std::string &name);
     void Wait(const double seconds);
     void Print(const double nt);
 
