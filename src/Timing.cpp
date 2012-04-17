@@ -120,6 +120,18 @@ void Timing::Update_Duration()
 }
 
 // **************************************************************
+void Timing::Add_Seconds(const double seconds)
+/**
+ * Add a number of seconds to the current timer.
+ */
+{
+    time_t nb_seconds = time_t(std::floor(seconds));
+    long nanoseconds = long((seconds - double(nb_seconds)) * sec_to_nanosec);
+    end.Add_sec(nb_seconds);
+    end.Add_nsec(nanoseconds);
+}
+
+// **************************************************************
 time_t Timing::Get_Duration_Seconds()
 /**
  * Returns timer's elapsed duration in seconds (integer representation).

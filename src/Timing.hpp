@@ -88,6 +88,7 @@ class Timing
         void Reset_Duration();
         void Reset_Timer();
         void Update_Duration();
+        void Add_Seconds(const double seconds);
         time_t Get_Duration_Seconds();
         long Get_Duration_NanoSeconds();
         double Get_Duration();
