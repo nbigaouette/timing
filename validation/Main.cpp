@@ -32,17 +32,17 @@ int main(int argc, char *argv[])
 
     const uint64_t N = 500000000;
 
-    static Timing &Timing_Total = timing::New_Timer("Total");
+    static Timer &Timing_Total = timing::New_Timer("Total");
     Timing_Total.Reset_Timer();
 
-    static Timing &Timing_Test1 = timing::New_Timer("Test1");
+    static Timer &Timing_Test1 = timing::New_Timer("Test1");
     Timing_Test1.Reset_Timer();
     int itemp = 0;
     for (uint64_t i = 0 ; i < N ; i++)
         itemp += itemp;
     Timing_Test1.Update_Duration();
 
-    static Timing &Timing_Wait = timing::New_Timer("Wait");
+    static Timer &Timing_Wait = timing::New_Timer("Wait");
     Timing_Wait.Reset_Timer();
     timing::Wait(1.0);
     Timing_Wait.Update_Duration();

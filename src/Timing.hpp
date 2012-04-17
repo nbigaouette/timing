@@ -17,8 +17,6 @@
 #define log printf
 #endif // #ifndef log
 
-// Forward declaration
-class Timing;
 
 // **************************************************************
 namespace timing
@@ -44,7 +42,7 @@ namespace timing
 }
 
 // **************************************************************
-class Timer
+class Clock
 {
 private:
     timespec timer;
@@ -54,11 +52,11 @@ public:
     time_t Get_sec()  const;
     long   Get_nsec() const;
 
-    Timer();
+    Clock();
     void Clear();
 
-    Timer operator+(const Timer &other);
-    Timer operator-(const Timer &other);
+    Clock operator+(const Clock &other);
+    Clock operator-(const Clock &other);
     void Add_sec(time_t seconds);
     void Add_nsec(long nanseconds);
     void Get_Current_Time();
@@ -66,16 +64,16 @@ public:
 };
 
 // **************************************************************
-class Timing
+class Timer
 {
     private:
         bool    is_initialized;
-        Timer start;
-        Timer end;
-        Timer duration;
+        Clock start;
+        Clock end;
+        Clock duration;
 
     public:
-        Timing();
+        Timer();
         void Reset_Duration();
         void Reset_Timer();
         void Update_Duration();
@@ -96,7 +94,7 @@ class Timing
 namespace timing
 {
     // **************************************************************
-    Timing & New_Timer(const std::string name);
+    Timer & New_Timer(const std::string name);
     void Wait(const double seconds);
     void Print_Timing_Info(const double nt);
 
@@ -125,7 +123,7 @@ namespace timing
         private:
             double first_time;
             double duration;
-            Timing *Timing_Total_Ptr;
+            Timer *Timer_Total_Ptr;
 
         public:
             Eta(const double _first_time, const double _duration);
