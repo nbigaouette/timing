@@ -342,7 +342,7 @@ namespace timing
         bool total_found = false;
         std::string total_key;
 
-        for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end(); it++ )
+        for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end(); ++it )
         {
             if (it->first == "Total" || it->first == "total")
             {
@@ -357,7 +357,7 @@ namespace timing
         log("%s|       Code Aspect         |          Duration          | Percentage |\n", s.c_str());
         log("%s|                           |  seconds   | per time step | over total |\n", s.c_str());
         log("%s|---------------------------|------------|---------------|------------|\n", s.c_str());
-        for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end(); it++ )
+        for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end(); ++it )
         {
             if (it->first != total_key)
             {
