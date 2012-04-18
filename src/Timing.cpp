@@ -198,6 +198,8 @@ namespace timing
     void Timer::Update_Duration()
     /**
     * Get actual time and return number of seconds (float representation) since start of Clock.
+    * NOTE: This function does NOT increment "duration" clock, it just sets it.
+    *       If the timer is stopped and restarted many times, the duration will be erased.
     */
     {
         if (is_started)
