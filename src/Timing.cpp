@@ -1,6 +1,15 @@
 
 #include "Timing.hpp"
 
+// See https://github.com/nbigaouette/stdcout
+#ifdef USE_STDCOUT
+// If stdcout.git is wanted, include it.
+#include <StdCout.hpp>
+#else
+// If stdcout.git is not wanted, define log() as being printf().
+#define log printf
+#endif // #ifdef USE_STDCOUT
+
 #include <cstdlib>
 #include <cstring> // memset()
 

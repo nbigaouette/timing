@@ -10,14 +10,6 @@
 #include <cassert>
 #include <stdint.h> // (u)int64_t
 
-// See https://github.com/nbigaouette/stdcout if wanted.
-#ifdef USE_STDCOUT
-#include <StdCout.hpp>
-#else
-// Define log() as being printf().
-#define log printf
-#endif // #ifdef USE_STDCOUT
-
 
 // **************************************************************
 // Define useful macros.
