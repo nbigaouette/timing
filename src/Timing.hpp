@@ -42,6 +42,10 @@
 // **************************************************************
 namespace timing
 {
+    // Forward declarations
+    class Clock;
+    class Timer;
+    class Eta;
 
     // **********************************************************
     // See Git_Info.cpp (generated dynamically from Git_Info.cpp_template & Makefile.rules)
