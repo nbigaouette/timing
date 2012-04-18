@@ -61,8 +61,6 @@ $ make gcc install DESTIR=/usr
 
 Note(s):
 
-* A timing object "Total" must be present. This is to calculate the ratio of all
-different timings.
 * When linking this library with your own code, make sure to link with librt too
   (using "-lrt" LDFLAG). librt provides the timing function used "clock_gettime()"
   and comes with glibc, so any linux distribution should work without problem.
