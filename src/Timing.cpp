@@ -368,6 +368,8 @@ namespace timing
         {
             it->second.Stop();
         }
+
+        TimerTotal.Stop();
     }
 
     // **********************************************************
