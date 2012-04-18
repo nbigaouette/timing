@@ -117,6 +117,7 @@ namespace timing
     // **********************************************************
     Timer::Timer()
     {
+        Start();
         is_started = false;
     }
 
