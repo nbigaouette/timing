@@ -195,7 +195,7 @@ namespace timing
     }
 
     // **********************************************************
-    double Timer::Calculate_Duration()
+    void Timer::Update_Duration()
     /**
     * Get actual time and return number of seconds (float representation) since start of Clock.
     */
@@ -214,7 +214,6 @@ namespace timing
         }
         timer_duration = Get_Duration();
 
-        return timer_duration;
     }
 
     // **********************************************************
@@ -332,7 +331,8 @@ namespace timing
         else
         {
             // ETA: Estimated Time of Arrival (s)
-            const double elapsed_time = TimerTotal.Calculate_Duration();
+            TimerTotal.Update_Duration();
+            const double elapsed_time = TimerTotal.Get_Duration();
             const double eta = std::max(0.0, ((duration - first_time) / (time - first_time) - 1.0) * elapsed_time);
 
             Timer tmp;

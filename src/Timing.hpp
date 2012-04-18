@@ -109,7 +109,7 @@ namespace timing
             time_t Get_Duration_Seconds() const;
             long Get_Duration_NanoSeconds() const;
             double Get_Duration() const;
-            double Calculate_Duration();
+            void Update_Duration();
             uint64_t Duration_Years();
             uint64_t Duration_Days();
             uint64_t Duration_Hours();
