@@ -363,7 +363,6 @@ namespace timing
             log("\n");
     }
 
-
     // **********************************************************
     void Print_Code_Aspect(const std::string &s, const std::string &timer_name,
                            const size_t longest_length, const std::string &total_key,
@@ -397,7 +396,7 @@ namespace timing
 
         size_t longest_length = 0;
         size_t current_length = 0;
-        for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end(); ++it )
+        for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end() ; ++it)
         {
             if (it->first == "Total" || it->first == "total")
             {
