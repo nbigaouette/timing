@@ -104,6 +104,7 @@ namespace timing
 
         public:
             Timer();
+            void Clear();
             void Start();
             void Stop();
             void Add_Seconds(const double seconds);

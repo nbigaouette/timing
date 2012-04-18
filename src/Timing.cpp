@@ -123,7 +123,15 @@ namespace timing
     Timer::Timer()
     {
         Start();
+    }
+
+    // **********************************************************
+    void Timer::Clear()
+    {
         is_started = false;
+        start.Clear();
+        end.Clear();
+        duration.Clear();
     }
 
     // **********************************************************
