@@ -337,7 +337,6 @@ namespace timing
             Timer tmp;
             tmp.Clear();
             tmp.Add_Seconds(eta);
-
             eta_string = tmp.Duration_Human_Readable();
         }
 
