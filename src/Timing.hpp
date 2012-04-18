@@ -119,6 +119,9 @@ namespace timing
             uint64_t Duration_Seconds();
             std::string Duration_Human_Readable();
             void Print() const;
+
+            // We want the Eta class to be able to access Timer's private members
+            friend class Eta;
     };
 
     // **********************************************************
