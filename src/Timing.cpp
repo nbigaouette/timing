@@ -8,6 +8,11 @@ namespace timing
 {
     std::map<std::string, Timer> TimersMap;
 
+    // This is a timer that keeps track of the total running time.
+    // The constructor starts it automatically.
+    // This is needed for ETA calculation.
+    Timer TimerTotal;
+
     // **********************************************************
     Timer & New_Timer(const std::string &name)
     {
