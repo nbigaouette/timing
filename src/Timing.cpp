@@ -343,6 +343,15 @@ namespace timing
     }
 
     // **********************************************************
+    void Stop_All_Timers()
+    {
+        for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end() ; ++it)
+        {
+            it->second.Update();
+        }
+    }
+
+    // **********************************************************
     void Print_N_Times(const std::string x, const size_t N, const bool newline)
     {
         for (size_t i = 0 ; i < N ; i++)

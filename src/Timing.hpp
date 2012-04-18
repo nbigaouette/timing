@@ -129,6 +129,8 @@ namespace timing
     inline void Print(const uint64_t nt) { /* Don't do anything */   }
 #endif // #ifndef DISABLE_TIMING
 
+    void Stop_All_Timers();
+
     // **********************************************************
     template <class Integer>
     std::string IntToStr(const Integer integer, const int width = 0, const char fill = ' ')
