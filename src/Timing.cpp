@@ -362,6 +362,10 @@ namespace timing
             it->second.Stop();
         }
 
+        // Total timer's duration clock is updated at each time step. Clear it
+        // because Stop() increments the duration using "duration = duration + (end - start)"
+        TimerTotal.duration.Clear();
+
         TimerTotal.Stop();
     }
 
