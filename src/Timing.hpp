@@ -31,9 +31,9 @@
 #ifndef DISABLE_TIMING
     #define TIMER_START(name, Timer_name) \
         static timing::Timer &Timer_name = timing::New_Timer(name); \
-        Timer_name.Reset();
+        Timer_name.Start();
     #define TIMER_STOP(name, Timer_name) \
-        Timer_name.Update();
+        Timer_name.Stop();
 #else // #ifndef DISABLE_TIMING
     #define TIMER_START(name, Timer_name) {}
     #define TIMER_STOP(name, Timer_name)  {}
@@ -93,17 +93,15 @@ namespace timing
     class Timer
     {
         private:
-            bool    is_initialized;
+            bool is_started;
             Clock start;
             Clock end;
             Clock duration;
 
         public:
             Timer();
-            bool Is_Initialized() { return is_initialized; }
-            void Reset_Duration();
-            void Reset();
-            void Update();
+            void Start();
+            void Stop();
             void Add_Seconds(const double seconds);
             time_t Get_Duration_Seconds();
             long Get_Duration_NanoSeconds();

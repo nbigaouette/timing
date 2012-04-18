@@ -117,29 +117,20 @@ namespace timing
     // **********************************************************
     Timer::Timer()
     {
-        is_initialized  = false;
+        is_started = false;
     }
 
     // **********************************************************
-    void Timer::Reset_Duration()
+    void Timer::Start()
     {
-        start.Clear();
-        end.Clear();
-        duration.Clear();
-        Reset();
-    }
-
-    // **********************************************************
-    void Timer::Reset()
-    {
-        is_initialized = true;
+        is_started = true;
         start.Get_Current_Time();
     }
 
     // **********************************************************
-    void Timer::Update()
+    void Timer::Stop()
     {
-        assert(is_initialized);
+        is_started = false;
 
         end.Get_Current_Time();
         duration = end - start;
@@ -191,8 +182,6 @@ namespace timing
     * Get actual time and return number of seconds (float representation) since start of Clock.
     */
     {
-        assert(is_initialized);
-
         Clock now;
         now.Get_Current_Time();
         duration = now - start;
@@ -316,21 +305,14 @@ namespace timing
         {
             assert(Timer_Total_Ptr != NULL);
 
-            if (not Timer_Total_Ptr->Is_Initialized())
-            {
-                eta_string = "";
-            }
-            else
-            {
-                // ETA: Estimated Time of Arrival (s)
-                const double elapsed_time = Timer_Total_Ptr->Calculate_Duration();
-                const double eta = std::max(0.0, ((duration - first_time) / (time - first_time) - 1.0) * elapsed_time);
+            // ETA: Estimated Time of Arrival (s)
+            const double elapsed_time = Timer_Total_Ptr->Calculate_Duration();
+            const double eta = std::max(0.0, ((duration - first_time) / (time - first_time) - 1.0) * elapsed_time);
 
-                Timer tmp;
-                tmp.Add_Seconds(eta);
+            Timer tmp;
+            tmp.Add_Seconds(eta);
 
-                eta_string = tmp.Duration_Human_Readable();
-            }
+            eta_string = tmp.Duration_Human_Readable();
         }
 
         return eta_string;
@@ -359,7 +341,7 @@ namespace timing
     {
         for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end() ; ++it)
         {
-            it->second.Update();
+            it->second.Stop();
         }
     }
 
