@@ -159,7 +159,6 @@ namespace timing
         private:
             double first_time;
             double duration;
-            Timer *Timer_Total_Ptr;
 
             std::string _Get_ETA(const double time) const;
 

@@ -316,7 +316,6 @@ namespace timing
     {
         first_time       = _first_time;
         duration         = _duration;
-        Timer_Total_Ptr = &timing::TimersMap["Total"];
     }
 
     // **********************************************************
@@ -331,10 +330,8 @@ namespace timing
         }
         else
         {
-            assert(Timer_Total_Ptr != NULL);
-
             // ETA: Estimated Time of Arrival (s)
-            const double elapsed_time = Timer_Total_Ptr->Calculate_Duration();
+            const double elapsed_time = TimerTotal.Calculate_Duration();
             const double eta = std::max(0.0, ((duration - first_time) / (time - first_time) - 1.0) * elapsed_time);
 
             Timer tmp;
@@ -386,9 +383,11 @@ namespace timing
     }
 
     // **********************************************************
-    void Print_Code_Aspect(const std::string &s, const std::string &timer_name,
-                           const size_t longest_length, const std::string &total_key,
-                           const uint64_t nt, const bool total_found)
+    void Print_Code_Aspect(const std::string &s,
+                           const Timer &timer,
+                           const std::string &timer_name,
+                           const size_t longest_length,
+                           const uint64_t nt)
     {
         std::string timer_name_w_spaces("");
         timer_name_w_spaces = timer_name;
@@ -396,14 +395,9 @@ namespace timing
 
         log("%s|", s.c_str());
         log(" %s ", timer_name_w_spaces.c_str());
-        log("| %10.5g | %13.6g | ", TimersMap[timer_name].Get_Duration(), TimersMap[timer_name].Get_Duration() / double(nt));
+        log("| %10.5g | %13.6g | ", timer.Get_Duration(), timer.Get_Duration() / double(nt));
 
-        if (total_found)
-        {
-            log("%10.2f |\n", (TimersMap[timer_name].Get_Duration() / TimersMap[total_key].Get_Duration())*100.0);
-        }
-        else
-            log("     -     |\n");
+        log("%10.2f |\n", (timer.Get_Duration() / TimerTotal.Get_Duration())*100.0);
     }
 
     // **********************************************************
@@ -413,19 +407,11 @@ namespace timing
      *  @param  nt  Number of time steps (iterations) done in the main program.
      */
     {
-        bool total_found = false;
-        std::string total_name;
 
         size_t longest_length = 0;
         size_t current_length = 0;
         for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end() ; ++it)
         {
-            if (it->first == "Total" || it->first == "total")
-            {
-                total_found = true;
-                total_name = it->first;
-            }
-
             // Find longest name
             current_length = it->first.length();
             if (current_length > longest_length)
@@ -486,21 +472,22 @@ namespace timing
 
         for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end(); ++it )
         {
-            if (it->first != total_name)
-                Print_Code_Aspect(s, it->first, longest_length, total_name, nt, total_found);
+            Print_Code_Aspect(s, TimersMap[it->first], it->first, longest_length, nt);
         }
+
+        log("%s|", s.c_str());
+        Print_N_Times("-", longest_length+2, false);
+        log("|------------|---------------|------------|\n");
+
         // Print total last
-        if (total_found)
-        {
-            Print_Code_Aspect(s, total_name, longest_length, total_name, nt, !total_found);
-        }
+        Print_Code_Aspect(s, TimerTotal, "Total", longest_length, nt);
 
         log("%s|", s.c_str());
         Print_N_Times("-", longest_length+2, false);
         log("|-----------------------------------------|\n");
 
         total_human_readable.resize(longest_length, ' ');
-        log("%s| %s | %39s |\n", s.c_str(), total_human_readable.c_str(), TimersMap[total_name].Duration_Human_Readable().c_str());
+        log("%s| %s | %39s |\n", s.c_str(), total_human_readable.c_str(), TimerTotal.Duration_Human_Readable().c_str());
 
         log("%s|", s.c_str());
         Print_N_Times("-", total_length, false);
