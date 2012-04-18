@@ -118,8 +118,8 @@ namespace timing
             std::string Duration_Human_Readable();
             void Print() const;
 
-            // We want the Eta class to be able to access Timer's private members
-            friend class Eta;
+            // Stop_All_Timers() needs to reset TimerTotal's duration
+            friend void Stop_All_Timers();
     };
 
     // **********************************************************
