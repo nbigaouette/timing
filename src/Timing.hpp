@@ -13,13 +13,11 @@
 // See https://github.com/nbigaouette/stdcout if wanted.
 #ifdef USE_STDCOUT
 #include <StdCout.hpp>
+#else
+// Define log() as being printf().
+#define log printf
 #endif // #ifdef USE_STDCOUT
 
-// If log() is not defined (StdCout.hpp was not included),
-// just define log() as being printf().
-#ifndef log
-#define log printf
-#endif // #ifndef log
 
 // **************************************************************
 // Define useful macros.
