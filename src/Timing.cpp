@@ -115,8 +115,8 @@ namespace timing
     // **********************************************************
     void Clock::Print() const
     {
-        log("  sec:  %ld\n", timer.tv_sec);
-        log("  nsec: %ld\n", timer.tv_nsec);
+        log("    sec:  %ld\n", timer.tv_sec);
+        log("    nsec: %ld\n", timer.tv_nsec);
     }
 
     // **********************************************************
