@@ -1,12 +1,26 @@
 
 #include "Timing.hpp"
 
+// See https://github.com/nbigaouette/stdcout
+#ifdef USE_STDCOUT
+// If stdcout.git is wanted, include it.
+#include <StdCout.hpp>
+#else
+// If stdcout.git is not wanted, define log() as being printf().
+#define log printf
+#endif // #ifdef USE_STDCOUT
+
 #include <cstdlib>
 #include <cstring> // memset()
 
 namespace timing
 {
     std::map<std::string, Timer> TimersMap;
+
+    // This is a timer that keeps track of the total running time.
+    // The constructor starts it automatically.
+    // This is needed for ETA calculation.
+    Timer TimerTotal;
 
     // **********************************************************
     Timer & New_Timer(const std::string &name)
@@ -92,45 +106,61 @@ namespace timing
     // **********************************************************
     void Clock::Get_Current_Time()
     {
-        clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &(this->timer));
+        // "CLOCK_PROCESS_CPUTIME_ID" measure the time taken by the process on the CPU.
+        // If the process is sleeping (using timing::Wait() for example), the time passed
+        // sleeping will not be counted!
+        //const int return_value = clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &(this->timer));
+        // "CLOCK_REALTIME" might have trouble in 2038 and is affected by clock changes (NTP)
+        //const int return_value = clock_gettime(CLOCK_REALTIME, &(this->timer));
+        // "CLOCK_MONOTONIC" should be the most reliable clock
+        const int return_value = clock_gettime(CLOCK_MONOTONIC, &(this->timer));
+        if (return_value != 0)
+        {
+            log("ERROR: Failed calling clock_gettime()\n");
+            abort();
+        }
     }
 
     // **********************************************************
     void Clock::Print() const
     {
-        log("  sec:  %ld\n", timer.tv_sec);
-        log("  nsec: %ld\n", timer.tv_nsec);
+        log("    sec:  %ld\n", timer.tv_sec);
+        log("    nsec: %ld\n", timer.tv_nsec);
     }
 
     // **********************************************************
     Timer::Timer()
     {
-        is_initialized  = false;
+        Clear();
+        Start();
     }
 
     // **********************************************************
-    void Timer::Reset_Duration()
+    void Timer::Clear()
     {
+        is_started = false;
         start.Clear();
         end.Clear();
         duration.Clear();
-        Reset();
     }
 
     // **********************************************************
-    void Timer::Reset()
+    void Timer::Start()
     {
-        is_initialized = true;
+        is_started = true;
         start.Get_Current_Time();
     }
 
     // **********************************************************
-    void Timer::Update()
+    void Timer::Stop()
     {
-        assert(is_initialized);
+        if (is_started)
+        {
+            is_started = false;
 
-        end.Get_Current_Time();
-        duration = end - start;
+            end.Get_Current_Time();
+            duration = duration + (end - start);
+        }
     }
 
     // **********************************************************
@@ -147,7 +177,7 @@ namespace timing
     }
 
     // **********************************************************
-    time_t Timer::Get_Duration_Seconds()
+    time_t Timer::Get_Duration_Seconds() const
     /**
     * Returns Clock's elapsed duration in seconds (integer representation).
     */
@@ -156,7 +186,7 @@ namespace timing
     }
 
     // **********************************************************
-    long Timer::Get_Duration_NanoSeconds()
+    long Timer::Get_Duration_NanoSeconds() const
     /**
     * Returns Clock's elapsed duration in nanoseconds (integer representation).
     */
@@ -165,7 +195,7 @@ namespace timing
     }
 
     // **********************************************************
-    double Timer::Get_Duration()
+    double Timer::Get_Duration() const
     /**
     * Returns Clock's elapsed duration in seconds (float representation).
     */
@@ -174,17 +204,17 @@ namespace timing
     }
 
     // **********************************************************
-    double Timer::Calculate_Duration()
+    void Timer::Update_Duration()
     /**
     * Get actual time and return number of seconds (float representation) since start of Clock.
+    * NOTE: This function does NOT increment "duration" clock, it just sets it.
+    *       If the timer is stopped and restarted many times, the duration will be erased.
     */
     {
-        assert(is_initialized);
+        if (is_started)
+            end.Get_Current_Time();
 
-        Clock now;
-        now.Get_Current_Time();
-        duration = now - start;
-        return Get_Duration();
+        duration = end - start;
     }
 
     // **********************************************************
@@ -287,7 +317,6 @@ namespace timing
     {
         first_time       = _first_time;
         duration         = _duration;
-        Timer_Total_Ptr = &timing::TimersMap["Total"];
     }
 
     // **********************************************************
@@ -302,23 +331,15 @@ namespace timing
         }
         else
         {
-            assert(Timer_Total_Ptr != NULL);
+            // ETA: Estimated Time of Arrival (s)
+            TimerTotal.Update_Duration();
+            const double elapsed_time = TimerTotal.Get_Duration();
+            const double eta = std::max(0.0, ((duration - first_time) / (time - first_time) - 1.0) * elapsed_time);
 
-            if (not Timer_Total_Ptr->Is_Initialized())
-            {
-                eta_string = "";
-            }
-            else
-            {
-                // ETA: Estimated Time of Arrival (s)
-                const double elapsed_time = Timer_Total_Ptr->Calculate_Duration();
-                const double eta = std::max(0.0, ((duration - first_time) / (time - first_time) - 1.0) * elapsed_time);
-
-                Timer tmp;
-                tmp.Add_Seconds(eta);
-
-                eta_string = tmp.Duration_Human_Readable();
-            }
+            Timer tmp;
+            tmp.Clear();
+            tmp.Add_Seconds(eta);
+            eta_string = tmp.Duration_Human_Readable();
         }
 
         return eta_string;
@@ -347,8 +368,14 @@ namespace timing
     {
         for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end() ; ++it)
         {
-            it->second.Update();
+            it->second.Stop();
         }
+
+        // Total timer's duration clock is updated at each time step. Clear it
+        // because Stop() increments the duration using "duration = duration + (end - start)"
+        TimerTotal.duration.Clear();
+
+        TimerTotal.Stop();
     }
 
     // **********************************************************
@@ -364,9 +391,11 @@ namespace timing
     }
 
     // **********************************************************
-    void Print_Code_Aspect(const std::string &s, const std::string &timer_name,
-                           const size_t longest_length, const std::string &total_key,
-                           const uint64_t nt, const bool total_found)
+    void Print_Code_Aspect(const std::string &s,
+                           const Timer &timer,
+                           const std::string &timer_name,
+                           const size_t longest_length,
+                           const uint64_t nt)
     {
         std::string timer_name_w_spaces("");
         timer_name_w_spaces = timer_name;
@@ -374,14 +403,9 @@ namespace timing
 
         log("%s|", s.c_str());
         log(" %s ", timer_name_w_spaces.c_str());
-        log("| %10.5g | %13.6g | ", TimersMap[timer_name].Get_Duration(), TimersMap[timer_name].Get_Duration() / double(nt));
+        log("| %10.5g | %13.6g | ", timer.Get_Duration(), timer.Get_Duration() / double(nt));
 
-        if (total_found)
-        {
-            log("%10.2f |\n", (TimersMap[timer_name].Get_Duration() / TimersMap[total_key].Get_Duration())*100.0);
-        }
-        else
-            log("     -     |\n");
+        log("%10.2f |\n", (timer.Get_Duration() / TimerTotal.Get_Duration())*100.0);
     }
 
     // **********************************************************
@@ -391,19 +415,12 @@ namespace timing
      *  @param  nt  Number of time steps (iterations) done in the main program.
      */
     {
-        bool total_found = false;
-        std::string total_name;
+        Stop_All_Timers();
 
         size_t longest_length = 0;
         size_t current_length = 0;
         for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end() ; ++it)
         {
-            if (it->first == "Total" || it->first == "total")
-            {
-                total_found = true;
-                total_name = it->first;
-            }
-
             // Find longest name
             current_length = it->first.length();
             if (current_length > longest_length)
@@ -464,21 +481,22 @@ namespace timing
 
         for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end(); ++it )
         {
-            if (it->first != total_name)
-                Print_Code_Aspect(s, it->first, longest_length, total_name, nt, total_found);
+            Print_Code_Aspect(s, TimersMap[it->first], it->first, longest_length, nt);
         }
+
+        log("%s|", s.c_str());
+        Print_N_Times("-", longest_length+2, false);
+        log("|------------|---------------|------------|\n");
+
         // Print total last
-        if (total_found)
-        {
-            Print_Code_Aspect(s, total_name, longest_length, total_name, nt, !total_found);
-        }
+        Print_Code_Aspect(s, TimerTotal, "Total", longest_length, nt);
 
         log("%s|", s.c_str());
         Print_N_Times("-", longest_length+2, false);
         log("|-----------------------------------------|\n");
 
         total_human_readable.resize(longest_length, ' ');
-        log("%s| %s | %39s |\n", s.c_str(), total_human_readable.c_str(), TimersMap[total_name].Duration_Human_Readable().c_str());
+        log("%s| %s | %39s |\n", s.c_str(), total_human_readable.c_str(), TimerTotal.Duration_Human_Readable().c_str());
 
         log("%s|", s.c_str());
         Print_N_Times("-", total_length, false);

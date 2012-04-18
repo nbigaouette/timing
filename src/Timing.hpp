@@ -10,16 +10,6 @@
 #include <cassert>
 #include <stdint.h> // (u)int64_t
 
-// See https://github.com/nbigaouette/stdcout if wanted.
-#ifdef USE_STDCOUT
-#include <StdCout.hpp>
-#endif // #ifdef USE_STDCOUT
-
-// If log() is not defined (StdCout.hpp was not included),
-// just define log() as being printf().
-#ifndef log
-#define log printf
-#endif // #ifndef log
 
 // **************************************************************
 // Define useful macros.
@@ -31,9 +21,9 @@
 #ifndef DISABLE_TIMING
     #define TIMER_START(name, Timer_name) \
         static timing::Timer &Timer_name = timing::New_Timer(name); \
-        Timer_name.Reset();
+        Timer_name.Start();
     #define TIMER_STOP(name, Timer_name) \
-        Timer_name.Update();
+        Timer_name.Stop();
 #else // #ifndef DISABLE_TIMING
     #define TIMER_START(name, Timer_name) {}
     #define TIMER_STOP(name, Timer_name)  {}
@@ -42,6 +32,10 @@
 // **************************************************************
 namespace timing
 {
+    // Forward declarations
+    class Clock;
+    class Timer;
+    class Eta;
 
     // **********************************************************
     // See Git_Info.cpp (generated dynamically from Git_Info.cpp_template & Makefile.rules)
@@ -93,22 +87,21 @@ namespace timing
     class Timer
     {
         private:
-            bool    is_initialized;
+            bool is_started;
             Clock start;
             Clock end;
             Clock duration;
 
         public:
             Timer();
-            bool Is_Initialized() { return is_initialized; }
-            void Reset_Duration();
-            void Reset();
-            void Update();
+            void Clear();
+            void Start();
+            void Stop();
             void Add_Seconds(const double seconds);
-            time_t Get_Duration_Seconds();
-            long Get_Duration_NanoSeconds();
-            double Get_Duration();
-            double Calculate_Duration();
+            time_t Get_Duration_Seconds() const;
+            long Get_Duration_NanoSeconds() const;
+            double Get_Duration() const;
+            void Update_Duration();
             uint64_t Duration_Years();
             uint64_t Duration_Days();
             uint64_t Duration_Hours();
@@ -116,6 +109,9 @@ namespace timing
             uint64_t Duration_Seconds();
             std::string Duration_Human_Readable();
             void Print() const;
+
+            // Stop_All_Timers() needs to reset TimerTotal's duration
+            friend void Stop_All_Timers();
     };
 
     // **********************************************************
@@ -153,7 +149,6 @@ namespace timing
         private:
             double first_time;
             double duration;
-            Timer *Timer_Total_Ptr;
 
             std::string _Get_ETA(const double time) const;
 
