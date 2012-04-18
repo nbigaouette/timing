@@ -92,7 +92,19 @@ namespace timing
     // **********************************************************
     void Clock::Get_Current_Time()
     {
-        clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &(this->timer));
+        // "CLOCK_PROCESS_CPUTIME_ID" measure the time taken by the process on the CPU.
+        // If the process is sleeping (using timing::Wait() for example), the time passed
+        // sleeping will not be counted!
+        //const int return_value = clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &(this->timer));
+        // "CLOCK_REALTIME" might have trouble in 2038 and is affected by clock changes (NTP)
+        //const int return_value = clock_gettime(CLOCK_REALTIME, &(this->timer));
+        // "CLOCK_MONOTONIC" should be the most reliable clock
+        const int return_value = clock_gettime(CLOCK_MONOTONIC, &(this->timer));
+        if (return_value != 0)
+        {
+            log("ERROR: Failed calling clock_gettime()\n");
+            abort();
+        }
     }
 
     // **********************************************************
