@@ -200,20 +200,10 @@ namespace timing
     * Get actual time and return number of seconds (float representation) since start of Clock.
     */
     {
-        double timer_duration = 0.0;
-
         if (is_started)
-        {
-            Clock now;
-            now.Get_Current_Time();
-            duration = now - start;
-        }
-        else
-        {
-            duration = end - start;
-        }
-        timer_duration = Get_Duration();
+            end.Get_Current_Time();
 
+        duration = end - start;
     }
 
     // **********************************************************
