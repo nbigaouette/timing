@@ -407,6 +407,7 @@ namespace timing
      *  @param  nt  Number of time steps (iterations) done in the main program.
      */
     {
+        Stop_All_Timers();
 
         size_t longest_length = 0;
         size_t current_length = 0;
