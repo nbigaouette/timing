@@ -108,9 +108,9 @@ namespace timing
             void Start();
             void Stop();
             void Add_Seconds(const double seconds);
-            time_t Get_Duration_Seconds();
-            long Get_Duration_NanoSeconds();
-            double Get_Duration();
+            time_t Get_Duration_Seconds() const;
+            long Get_Duration_NanoSeconds() const;
+            double Get_Duration() const;
             double Calculate_Duration();
             uint64_t Duration_Years();
             uint64_t Duration_Days();

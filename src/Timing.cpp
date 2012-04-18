@@ -167,7 +167,7 @@ namespace timing
     }
 
     // **********************************************************
-    time_t Timer::Get_Duration_Seconds()
+    time_t Timer::Get_Duration_Seconds() const
     /**
     * Returns Clock's elapsed duration in seconds (integer representation).
     */
@@ -176,7 +176,7 @@ namespace timing
     }
 
     // **********************************************************
-    long Timer::Get_Duration_NanoSeconds()
+    long Timer::Get_Duration_NanoSeconds() const
     /**
     * Returns Clock's elapsed duration in nanoseconds (integer representation).
     */
@@ -185,7 +185,7 @@ namespace timing
     }
 
     // **********************************************************
-    double Timer::Get_Duration()
+    double Timer::Get_Duration() const
     /**
     * Returns Clock's elapsed duration in seconds (float representation).
     */
