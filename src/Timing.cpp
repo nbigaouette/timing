@@ -335,6 +335,7 @@ namespace timing
             const double eta = std::max(0.0, ((duration - first_time) / (time - first_time) - 1.0) * elapsed_time);
 
             Timer tmp;
+            tmp.Clear();
             tmp.Add_Seconds(eta);
 
             eta_string = tmp.Duration_Human_Readable();
