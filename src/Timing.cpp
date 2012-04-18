@@ -144,10 +144,13 @@ namespace timing
     // **********************************************************
     void Timer::Stop()
     {
-        is_started = false;
+        if (is_started)
+        {
+            is_started = false;
 
-        end.Get_Current_Time();
-        duration = end - start;
+            end.Get_Current_Time();
+            duration = duration + (end - start);
+        }
     }
 
     // **********************************************************
