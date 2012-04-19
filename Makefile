@@ -4,7 +4,7 @@
 LIB             := timing
 BIN              = $(LIB)
 SRCDIRS          = src
-TESTDIRS         = validation
+TESTDIRS         = example
 SRCEXT           = cpp
 HEADEXT          = hpp
 HEADERS          = $(wildcard $(addsuffix *.$(HEADEXT),$(addsuffix /, $(SRCDIRS)) ) )
