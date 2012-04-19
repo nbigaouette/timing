@@ -83,6 +83,43 @@ namespace timing
             end.Get_Current_Time();
             duration = duration + (end - start);
         }
+
+        // Save timing information
+        if (output_folder != "")
+        {
+            if (output_filename != "")
+            {
+                log("Saving timer's output to \"%s\".\n", output_filename.c_str());
+
+                // If first write, try to open file.
+                if (not output_file.is_open())
+                {
+                    output_file.open(output_filename.c_str(), std::ios_base::out);
+
+                    // Try to add a header
+                    if (not output_file.is_open())
+                        log("ERROR: Could not open file \"%s\"!\n", output_filename.c_str());
+                    else
+                    {
+                        output_file << "# Step,           Start         , Duration\n";
+                    }
+                }
+
+                // File should be opened now. Attempt write.
+                if (not output_file.is_open())
+                    log("ERROR: Could not open file \"%s\"!\n", output_filename.c_str());
+                else
+                {
+                    output_file << std::setw(6) << timers_step << ", " << start.Get_Time() << ", " << Get_Duration() << "\n";
+                }
+            }
+            else
+            {
+                log("ERROR: Timer's filename is empty!\n");
+                Print();
+                abort();
+            }
+        }
     }
 
     // **********************************************************
