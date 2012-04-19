@@ -38,6 +38,35 @@ namespace timing
     class Eta;
 
     // **********************************************************
+    Timer & New_Timer(const std::string &name);
+    void Wait(const double seconds);
+    void Print_N_Times(const std::string x, const size_t N, const bool newline = true);
+    void _Print(const uint64_t nt);
+#ifndef DISABLE_TIMING
+    inline void Print(const uint64_t nt) { _Print(nt);               }
+#else // #ifndef DISABLE_TIMING
+    inline void Print(const uint64_t nt) { /* Don't do anything */   }
+#endif // #ifndef DISABLE_TIMING
+
+    void Stop_All_Timers();
+
+    // **********************************************************
+    template <class Integer>
+    std::string IntToStr(const Integer integer, const int width = 0, const char fill = ' ')
+    {
+        std::ostringstream MyStream;
+        if (width != 0)
+        {
+            //MyStream << std::setw(width);
+            //MyStream << std::setfill(fill);
+            MyStream.width(width);
+            MyStream.fill(fill);
+        }
+        MyStream << integer << std::flush;
+        return (MyStream.str());
+    }
+
+    // **********************************************************
     // See Git_Info.cpp (generated dynamically from Git_Info.cpp_template & Makefile.rules)
     void Log_Git_Info(std::string basename = "");
 
@@ -113,35 +142,6 @@ namespace timing
             // Stop_All_Timers() needs to reset TimerTotal's duration
             friend void Stop_All_Timers();
     };
-
-    // **********************************************************
-    Timer & New_Timer(const std::string &name);
-    void Wait(const double seconds);
-    void Print_N_Times(const std::string x, const size_t N, const bool newline = true);
-    void _Print(const uint64_t nt);
-#ifndef DISABLE_TIMING
-    inline void Print(const uint64_t nt) { _Print(nt);               }
-#else // #ifndef DISABLE_TIMING
-    inline void Print(const uint64_t nt) { /* Don't do anything */   }
-#endif // #ifndef DISABLE_TIMING
-
-    void Stop_All_Timers();
-
-    // **********************************************************
-    template <class Integer>
-    std::string IntToStr(const Integer integer, const int width = 0, const char fill = ' ')
-    {
-        std::ostringstream MyStream;
-        if (width != 0)
-        {
-            //MyStream << std::setw(width);
-            //MyStream << std::setfill(fill);
-            MyStream.width(width);
-            MyStream.fill(fill);
-        }
-        MyStream << integer << std::flush;
-        return (MyStream.str());
-    }
 
     // **********************************************************
     class Eta
