@@ -57,6 +57,7 @@ class Timer:
         self.load_csv()
 
     def load_csv(self):
+        print "Reading file ", self.filename, "..."
         self.data = np.loadtxt(self.filename, delimiter=',', skiprows=1, comments='#', converters = {1: mpl.dates.datestr2num}, ndmin=2)
 
         #print "data =", self.data
@@ -74,6 +75,8 @@ class Timer:
             self.dates_dur[i] = dt.timedelta(seconds = self.duration[i])
             self.dates_end[i] += self.dates_dur[i]
 
+        print "Done!"
+
     def set_time0(self, time0):
         self.time0 = time0
 
@@ -82,6 +85,7 @@ class Timer:
         self.nb_timers = nb_timers
 
     def plot_hbar(self, fig, ax):
+        print "Plotting \"" + self.name + "\""
         ypos = np.arange(self.t, self.t+1)+0.5
         left = mpl.dates.date2num(self.dates_start)
         self.rects = []
