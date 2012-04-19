@@ -26,10 +26,10 @@ namespace timing
     extern uint64_t    timers_step;    // Current time step
 
     // **********************************************************
-    void Timer::Set_Name(const std::string &_name)
+    void Timer::Set_Name(const std::string &_full_name, const std::string &_strict_name)
     {
-        name = _name;
-        output_filename = output_folder + "/" + name + ".csv";
+        name = _full_name;
+        output_filename = output_folder + "/" + _strict_name + ".csv";
     }
 
     // **********************************************************

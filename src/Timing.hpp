@@ -28,7 +28,7 @@
 // won't do anything, as will ETA class and timing::Print().
 #ifndef DISABLE_TIMING
     #define TIMER_START(name, Timer_name) \
-        static timing::Timer &Timer_name = timing::New_Timer(name); \
+        static timing::Timer &Timer_name = timing::New_Timer(name, QUOTEME(Timer_name)); \
         Timer_name.Start();
     #define TIMER_STOP(name, Timer_name) \
         Timer_name.Stop();
@@ -52,7 +52,7 @@ namespace timing
     class Eta;
 
     // **********************************************************
-    Timer & New_Timer(const std::string &name);
+    Timer & New_Timer(const std::string &full_name, const std::string &strict_name);
     void Wait(const double seconds);
     void Print_N_Times(const std::string x, const size_t N, const bool newline = true);
     void _Print(const uint64_t nt);
@@ -143,11 +143,10 @@ namespace timing
             std::string   output_filename;
             std::ofstream output_file;
 
-            void Set_Name(const std::string &_name);
-
         public:
             Timer();
             Timer(const Timer &other);
+            void Set_Name(const std::string &_full_name, const std::string &_strict_name);
             void Clear();
             void Start();
             void Stop();

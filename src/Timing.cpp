@@ -34,10 +34,10 @@ namespace timing
     void Create_Folder_If_Does_Not_Exists(const std::string path);
 
     // **********************************************************
-    Timer & New_Timer(const std::string &_name)
+    Timer & New_Timer(const std::string &full_name, const std::string &strict_name)
     {
-        Timer &new_timer = TimersMap[_name];
-        new_timer.Set_Name(_name);
+        Timer &new_timer = TimersMap[full_name];
+        new_timer.Set_Name(full_name, strict_name);
         return new_timer;
     }
 
@@ -68,7 +68,7 @@ namespace timing
         }
 
         // Set total timer's name manually
-        TimerTotal.Set_Name("Total");
+        TimerTotal.Set_Name("Total", "Timing_Total");
 
         // Total timer's duration clock is updated at each time step. Clear it
         // because Stop() increments the duration using "duration = duration + (end - start)"
