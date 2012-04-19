@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
     // Show some nice git informations about the working directory.
     timing::Log_Git_Info();
 
+    // Enable saving the timing information in "output" folder.
+    TIMERS_ENABLE_OUTPUT("output");
 
     // Do heavy calculation here
     const int max_t = 100000000;
