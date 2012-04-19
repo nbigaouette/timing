@@ -29,7 +29,12 @@ namespace timing
     void Timer::Set_Name(const std::string &_full_name, const std::string &_strict_name)
     {
         name = _full_name;
-        output_filename = output_folder + "/" + _strict_name + ".csv";
+
+        // Only set the filename once. Since Set_Name() can be called multiple
+        // times for the same _full_name but with a different _strict_name,
+        // only set the filename once.
+        if (output_filename == "")
+            output_filename = output_folder + "/" + _strict_name + ".csv";
     }
 
     // **********************************************************
