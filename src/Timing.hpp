@@ -129,6 +129,11 @@ namespace timing
             Clock end;
             Clock duration;
 
+            // Used in output
+            std::string   name;
+            std::string   output_filename;
+            std::ofstream output_file;
+
             void Set_Name(const std::string &_name);
 
         public:
