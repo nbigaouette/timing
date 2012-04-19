@@ -159,6 +159,8 @@ namespace timing
 
             // Stop_All_Timers() needs to reset TimerTotal's duration
             friend void Stop_All_Timers();
+            // New_Timer() acts as a constructor-like
+            friend Timer & New_Timer(const std::string &_name);
     };
 
     // **********************************************************
