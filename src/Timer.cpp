@@ -75,6 +75,7 @@ namespace timing
     void Timer::Start()
     {
         is_started = true;
+        output_has_been_performed = false;
         start.Get_Current_Time();
     }
 
@@ -90,7 +91,7 @@ namespace timing
         }
 
         // Save timing information
-        if (output_folder != "")
+        if (not output_has_been_performed and output_folder != "")
         {
             if (output_filename != "")
             {
@@ -124,6 +125,8 @@ namespace timing
                 Print();
                 abort();
             }
+
+            output_has_been_performed = true;
         }
     }
 
