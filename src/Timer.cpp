@@ -97,7 +97,7 @@ namespace timing
         {
             if (output_filename != "")
             {
-                log("Saving timer's output to \"%s\".\n", output_filename.c_str());
+                //log("Saving timer's output to \"%s\".\n", output_filename.c_str());
 
                 // If first write, try to open file.
                 if (not output_file.is_open())
