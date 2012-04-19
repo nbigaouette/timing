@@ -70,6 +70,10 @@ int main(int argc, char *argv[])
     }
     TIMER_STOP("cosine", Timing_Cosine2);
 
+    TIMER_START("Wait", Timing_Wait);
+    timing::Wait(2.123);
+    TIMER_STOP("Wait", Timing_Wait);
+
     timing::Print(max_t);
 
     return EXIT_SUCCESS;
