@@ -1,3 +1,5 @@
 .kdev4
 src/Git_Info.cpp
 timing_testing
+output
+build
