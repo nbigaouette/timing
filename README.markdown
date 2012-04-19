@@ -76,6 +76,7 @@ Timers are accessed through four macros. These macros are:
    folder "output_folder". Every time TIMER_STOP() is called, the timer's
    information will be saved. Note that the amount of data can increase fast
    so don't enable blindly.
+   If used, _must_ be called _before_ any TIMER_START().
  * TIMERS_SET_STEP(step) Set the current step/iteration. Only used when timers
    information is saved.
 
