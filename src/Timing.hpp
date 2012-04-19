@@ -131,6 +131,7 @@ namespace timing
 
         public:
             Timer();
+            Timer(const Timer &other);
             void Clear();
             void Start();
             void Stop();

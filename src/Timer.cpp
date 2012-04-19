@@ -30,6 +30,19 @@ namespace timing
     }
 
     // **********************************************************
+    Timer::Timer(const Timer &other)
+    /**
+     * Copy constructor. Required so that Timer class can contain
+     * an std::ofstream (output_file).
+     */
+    {
+        is_started      = other.is_started;
+        start           = other.start;
+        end             = other.end;
+        duration        = other.duration;
+    }
+
+    // **********************************************************
     void Timer::Clear()
     {
         is_started = false;
