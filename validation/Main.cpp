@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
     TIMER_START("cosine", Timing_Cosine);
     for (int t = 0 ; t < max_t ; t++)
     {
+        TIMERS_SET_STEP(t);
+
         const double tmp = std::cos(t);
 
         // Print only 10 ETA, else we are flooded...
@@ -43,6 +45,8 @@ int main(int argc, char *argv[])
     TIMER_START("sine", Timing_Sine);
     for (int t = 0 ; t < max_t ; t++)
     {
+        TIMERS_SET_STEP(t);
+
         const double tmp = std::sin(t);
 
         // Print only 10 ETA, else we are flooded...
@@ -56,6 +60,8 @@ int main(int argc, char *argv[])
     TIMER_START("cosine", Timing_Cosine2);
     for (int t = 0 ; t < max_t ; t++)
     {
+        TIMERS_SET_STEP(t);
+
         const double tmp = std::cos(t);
 
         // Print only 10 ETA, else we are flooded...
