@@ -49,6 +49,13 @@ namespace timing
 
     // **********************************************************
     std::string Clock::Get_Time() const
+    /**
+     * Return a string containing the clock's time in the format
+     * Www Mmm dd hh:mm:ss.UUUUUU yyyy
+     *
+     * NOTE: ctime() does NOT return the microseconds part.
+     *       It must be added explicitly.
+     */
     {
         // We can't get a date/time string from a timespec. Convert
         // it to a time_t first.
@@ -56,12 +63,32 @@ namespace timing
 
         // ctime returns this format: "Www Mmm dd hh:mm:ss yyyy\n\0"
         // thus a 26 length string (including the trailing newline '\n' and NULL '\0')
+        // So just copy the first 24 charaters
         char c_current_date[26];
         memcpy(c_current_date, ctime(&tmp_time), 26*sizeof(char));
         // Remove the end of line character by setting it to NULL
         c_current_date[24] = '\0';
 
-        return c_current_date;
+        // Store the year: we'll add sub-second values (microseconds)
+        char c_year[5];
+        strncpy(c_year, &(c_current_date[20]), 4);
+        c_year[4] = '\0';
+
+        // Clear the year from "c_current_date" (and the space before the year)
+        memset(&(c_current_date[19]), 0, 5*sizeof(char));
+
+        std::string current_date = c_current_date;
+
+        //log("c_year = %s\n", c_year);
+        // Put the microseconds before years
+        memset(c_current_date, 0, 26*sizeof(char));
+        const uint64_t microseconds = uint64_t(timer.tv_nsec / 1000L);
+        sprintf(c_current_date, ".%-6llu", microseconds);
+        current_date += std::string(c_current_date) + std::string(" ") + std::string(c_year);
+
+        // Add also microseconds
+
+        return current_date;
     }
 
     // **********************************************************
