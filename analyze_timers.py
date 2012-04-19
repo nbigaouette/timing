@@ -13,7 +13,7 @@ import datetime as dt
 from optparse import OptionParser
 parser = OptionParser()
 parser.add_option("-i", "--input", type=str,            dest="path",                   default=None,    help="Folder containing timers files [default: %default]")
-parser.add_option("-t", "--type",  type=str,            dest="types", action="append", default=None,    help="Type(s) of figure(s) (possibilities: barh, ts)")
+parser.add_option("-t", "--type",  type=str,            dest="types", action="append", default=None,    help="Type(s) of figure(s) (available: barh, ts)")
 parser.add_option(      "--scale", action="store_true", dest="scale",                  default=False,   help="Scale time step plot by number of time steps [default: %default]")
 (options, args) = parser.parse_args()
 # ****************************************************************************************************************************************************
