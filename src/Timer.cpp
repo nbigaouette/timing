@@ -53,6 +53,8 @@ namespace timing
         start           = other.start;
         end             = other.end;
         duration        = other.duration;
+        name            = other.name;
+        output_filename = other.output_filename;
     }
 
     // **********************************************************
