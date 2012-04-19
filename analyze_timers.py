@@ -13,7 +13,7 @@ import datetime as dt
 from optparse import OptionParser
 parser = OptionParser()
 parser.add_option("-i", "--input", type=str,            dest="path",                   default=None,    help="Folder containing timers files [default: %default]")
-parser.add_option("-t", "--type",  type=str,            dest="types", action="append", default=None,    help="Type(s) of figure(s) (possibilities: barh)")
+parser.add_option("-t", "--type",  type=str,            dest="types", action="append", default=None,    help="Type(s) of figure(s) (possibilities: barh, ts)")
 (options, args) = parser.parse_args()
 # ****************************************************************************************************************************************************
 
@@ -99,6 +99,18 @@ class Timer:
             ax.text(text_x, ypos, self.name, horizontalalignment='center',
                     verticalalignment='center', color='black')
 
+    def plot_timesteps(self, fig, ax):
+        print "Plotting \"" + self.name + "\""
+        if (len(self.step) == 1):
+            plot_step = np.array([0, self.step[0]])
+            plot_duration = np.array([1.0e-7, self.duration[0]])
+        else:
+            plot_step = self.step
+            plot_duration = self.duration
+
+        delta_ts = 1.0
+        ax.semilogy(plot_step, plot_duration / delta_ts, color = colors[(self.t+1) % len(colors)], label = self.name)
+
 
 
 # Load timers information
@@ -133,7 +145,13 @@ for figue_type in options.types:
         ax.xaxis.set_major_locator(mpl.dates.SecondLocator(interval=1))
 
         ax.grid(True)
+    elif (figue_type == "ts"):
+        for t in xrange(nb_timers):
+            timers[t].plot_timesteps(fig, ax)
 
+        ax.set_xlabel("Time step")
+        ax.set_ylabel("Duration (seconds)")
+        ax.legend(loc="best")
 
 plt.show()
 
