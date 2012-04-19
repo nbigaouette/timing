@@ -23,6 +23,11 @@ namespace timing
     extern Timer TimerTotal;
 
     // **********************************************************
+    void Timer::Set_Name(const std::string &_name)
+    {
+    }
+
+    // **********************************************************
     Timer::Timer()
     {
         Clear();

@@ -129,6 +129,8 @@ namespace timing
             Clock end;
             Clock duration;
 
+            void Set_Name(const std::string &_name);
+
         public:
             Timer();
             Timer(const Timer &other);
