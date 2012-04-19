@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     TIMER_START("sine", Timing_Sine);
     for (int t = 0 ; t < max_t ; t++)
     {
-        TIMERS_SET_STEP(t);
+        TIMERS_SET_STEP(max_t + t);
 
         const double tmp = std::sin(t);
 
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     TIMER_START("cosine", Timing_Cosine2);
     for (int t = 0 ; t < max_t ; t++)
     {
-        TIMERS_SET_STEP(t);
+        TIMERS_SET_STEP(max_t + max_t + t);
 
         const double tmp = std::cos(t);
 
