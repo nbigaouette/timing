@@ -84,7 +84,7 @@ class Timer:
             # +1 in colors array to make sure that "Total" timer gets blue, even if at the end of the list
             self.rects.append(
                     ax.barh(bottom=ypos, width=width, left=left[i],
-                            align='center', height=0.5, color=colors[(self.t+1) % len(colors)],
+                            align='center', height=1.0, color=colors[(self.t+1) % len(colors)],
                             alpha = 0.6)
                 )
 
