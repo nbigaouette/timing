@@ -203,6 +203,14 @@ namespace timing
      */
     {
     }
+
+    // **********************************************************
+    void Set_Timers_Step(const uint64_t _step)
+    /**
+     * If saving timing information is desired, set the current time step.
+     */
+    {
+    }
 } // namespace timing
 
 // ********** End of file ***************************************
