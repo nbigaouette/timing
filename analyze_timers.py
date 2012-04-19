@@ -169,6 +169,9 @@ for figue_type in options.types:
         # Enable grid
         ax.grid(True)
 
+        ax.set_xlabel("Time")
+        ax.set_ylabel("Timers")
+
     elif (figue_type == "ts"):
         for t in xrange(nb_timers):
             timers[t].plot_timesteps(fig, ax)
