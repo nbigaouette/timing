@@ -24,7 +24,17 @@ if (options.path == None):
 
 if (options.types == None):
     print "ERROR: Please at least one type of figure using --t/--type."
+    print "       Available types:  barh    Horizontal bars"
+    print "                         ts      Time steps"
     sys.exit(0)
+for plot_type in options.types:
+    try:
+        ["barh", "ts"].index(plot_type)
+    except ValueError:
+        print "ERROR: Unsupported figure type \"" + plot_type + "\"."
+        print "       Available types:  barh    Horizontal bars"
+        print "                         ts      Time steps"
+        sys.exit(0)
 
 #full_path = os.path.abspath(options.path)
 full_path = options.path
