@@ -235,6 +235,14 @@ namespace timing
      * of the timing information to a file.
      */
     {
+        if (_output_folder == "")
+        {
+            log("WARNING: Setting an empty string for timing's output folder will disable its output!\n");
+            log("         To use the current folder, just use \"./\" instead.\n");
+        }
+        output_folder = _output_folder;
+        log("Timing information will be saved in \"%s\".\n", output_folder.c_str());
+        Create_Folder_If_Does_Not_Exists(output_folder);
     }
 
     // **********************************************************
