@@ -113,6 +113,7 @@ namespace timing
             Clock();
             void Clear();
 
+            std::string Get_Time() const;
             Clock operator+(const Clock &other);
             Clock operator-(const Clock &other);
             void Add_sec(time_t seconds);

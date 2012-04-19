@@ -48,6 +48,23 @@ namespace timing
     }
 
     // **********************************************************
+    std::string Clock::Get_Time() const
+    {
+        // We can't get a date/time string from a timespec. Convert
+        // it to a time_t first.
+        time_t tmp_time = timer.tv_sec;
+
+        // ctime returns this format: "Www Mmm dd hh:mm:ss yyyy\n\0"
+        // thus a 26 length string (including the trailing newline '\n' and NULL '\0')
+        char c_current_date[26];
+        memcpy(c_current_date, ctime(&tmp_time), 26*sizeof(char));
+        // Remove the end of line character by setting it to NULL
+        c_current_date[24] = '\0';
+
+        return c_current_date;
+    }
+
+    // **********************************************************
     Clock Clock::operator+(const Clock &other)
     /**
     * Add two Clocks
