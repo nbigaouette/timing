@@ -251,8 +251,7 @@ namespace timing
      * If saving timing information is desired, set the current time step.
      */
     {
-        if (output_folder != "")
-            timers_step = _step;
+        timers_step = _step;
     }
 
 } // namespace timing
