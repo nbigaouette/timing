@@ -31,6 +31,7 @@ if (not os.path.exists(full_path)):
 timer_files = glob.glob(os.path.join(full_path, "*"))
 # Place "Total" timer file at top
 timer_files.sort()
+timer_files = timer_files[::-1]
 Total_filename = os.path.join(full_path, "Timing_Total.csv")
 timer_files.remove(Total_filename) # Remove it
 timer_files.append(Total_filename) # Add it back at end
