@@ -9,6 +9,7 @@
 #include <sstream> // Defines also "timespec"
 #include <cassert>
 #include <stdint.h> // (u)int64_t
+#include <fstream>
 
 
 // **************************************************************
