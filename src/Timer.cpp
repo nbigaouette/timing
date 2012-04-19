@@ -21,6 +21,9 @@ namespace timing
     // The constructor starts it automatically.
     // This is needed for ETA calculation.
     extern Timer TimerTotal;
+    // Flags to enable/disable timing information output
+    extern std::string output_folder;  // Directory where to save timing information
+    extern uint64_t    timers_step;    // Current time step
 
     // **********************************************************
     void Timer::Set_Name(const std::string &_name)
