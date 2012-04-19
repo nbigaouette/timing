@@ -12,337 +12,33 @@
 
 #include <cstdlib>
 #include <cstring> // memset()
+#include <sys/stat.h> // Check if folder exists
 
 namespace timing
 {
-    std::map<std::string, Timer> TimersMap;
+    // **********************************************************
+    // Variables global to the library but hidden from program
 
+    // Map dynamically containing all timers
+    std::map<std::string, Timer> TimersMap;
     // This is a timer that keeps track of the total running time.
     // The constructor starts it automatically.
     // This is needed for ETA calculation.
     Timer TimerTotal;
+    // Flags to enable/disable timing information output
+    std::string output_folder;  // Directory where to save timing information
+    uint64_t    timers_step;    // Current time step
 
     // **********************************************************
-    Timer & New_Timer(const std::string &name)
-    {
-        return TimersMap[name];
-    }
+    // Local to this file function declarations
+    void Create_Folder_If_Does_Not_Exists(const std::string path);
 
     // **********************************************************
-    time_t Clock::Get_sec() const
+    Timer & New_Timer(const std::string &full_name, const std::string &strict_name)
     {
-        return timer.tv_sec;
-    }
-
-    // **********************************************************
-    long Clock::Get_nsec() const
-    {
-        return timer.tv_nsec;
-    }
-
-    // **********************************************************
-    void Clock::Clear()
-    {
-        timer.tv_sec  = 0;
-        timer.tv_nsec = 0;
-    }
-
-    // **********************************************************
-    Clock::Clock()
-    {
-        Clear();
-    }
-
-    // **********************************************************
-    Clock Clock::operator+(const Clock &other)
-    /**
-    * Add two Clocks
-    */
-    {
-        timer.tv_sec  = timer.tv_sec  + other.timer.tv_sec;
-        timer.tv_nsec = timer.tv_nsec + other.timer.tv_nsec;
-
-        // tv_nsec stores the nansecond between tv_sec and the next second.
-        // Increment the number of seconds if needed
-        if (timer.tv_nsec >= timing::TenToNine)
-        {
-            timer.tv_sec++;
-            timer.tv_nsec = timer.tv_nsec - timing::TenToNine;
-        }
-
-        return *this;
-    }
-
-    // **********************************************************
-    Clock Clock::operator-(const Clock &other)
-    {
-        // Prevent overflow in the case that tv_nsec > other.tv_nsec
-        if (timer.tv_nsec - other.timer.tv_nsec < 0)
-        {
-            timer.tv_sec  = timer.tv_sec - other.timer.tv_sec - 1;
-            timer.tv_nsec = timing::TenToNine + timer.tv_nsec - other.timer.tv_nsec;
-        }
-        else
-        {
-            timer.tv_sec  = timer.tv_sec  - other.timer.tv_sec;
-            timer.tv_nsec = timer.tv_nsec - other.timer.tv_nsec;
-        }
-
-        return *this;
-    }
-
-    // **********************************************************
-    void Clock::Add_sec(time_t seconds)
-    {
-        timer.tv_sec += seconds;
-    }
-
-    // **********************************************************
-    void Clock::Add_nsec(long nanoseconds)
-    {
-        timer.tv_nsec += nanoseconds;
-    }
-
-    // **********************************************************
-    void Clock::Get_Current_Time()
-    {
-        // "CLOCK_PROCESS_CPUTIME_ID" measure the time taken by the process on the CPU.
-        // If the process is sleeping (using timing::Wait() for example), the time passed
-        // sleeping will not be counted!
-        //const int return_value = clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &(this->timer));
-        // "CLOCK_REALTIME" might have trouble in 2038 and is affected by clock changes (NTP)
-        //const int return_value = clock_gettime(CLOCK_REALTIME, &(this->timer));
-        // "CLOCK_MONOTONIC" should be the most reliable clock
-        const int return_value = clock_gettime(CLOCK_MONOTONIC, &(this->timer));
-        if (return_value != 0)
-        {
-            log("ERROR: Failed calling clock_gettime()\n");
-            abort();
-        }
-    }
-
-    // **********************************************************
-    void Clock::Print() const
-    {
-        log("    sec:  %ld\n", timer.tv_sec);
-        log("    nsec: %ld\n", timer.tv_nsec);
-    }
-
-    // **********************************************************
-    Timer::Timer()
-    {
-        Clear();
-        Start();
-    }
-
-    // **********************************************************
-    void Timer::Clear()
-    {
-        is_started = false;
-        start.Clear();
-        end.Clear();
-        duration.Clear();
-    }
-
-    // **********************************************************
-    void Timer::Start()
-    {
-        is_started = true;
-        start.Get_Current_Time();
-    }
-
-    // **********************************************************
-    void Timer::Stop()
-    {
-        if (is_started)
-        {
-            is_started = false;
-
-            end.Get_Current_Time();
-            duration = duration + (end - start);
-        }
-    }
-
-    // **********************************************************
-    void Timer::Add_Seconds(const double seconds)
-    /**
-    * Add a number of seconds to the current Clock.
-    */
-    {
-        time_t nb_seconds = time_t(std::floor(seconds));
-        long nanoseconds = long((seconds - double(nb_seconds)) * timing::sec_to_nanosec);
-        end.Add_sec(nb_seconds);
-        end.Add_nsec(nanoseconds);
-        duration = end - start;
-    }
-
-    // **********************************************************
-    time_t Timer::Get_Duration_Seconds() const
-    /**
-    * Returns Clock's elapsed duration in seconds (integer representation).
-    */
-    {
-        return duration.Get_sec();
-    }
-
-    // **********************************************************
-    long Timer::Get_Duration_NanoSeconds() const
-    /**
-    * Returns Clock's elapsed duration in nanoseconds (integer representation).
-    */
-    {
-        return duration.Get_nsec();
-    }
-
-    // **********************************************************
-    double Timer::Get_Duration() const
-    /**
-    * Returns Clock's elapsed duration in seconds (float representation).
-    */
-    {
-        return double(Get_Duration_Seconds()) + double(Get_Duration_NanoSeconds()) / double(timing::TenToNine);
-    }
-
-    // **********************************************************
-    void Timer::Update_Duration()
-    /**
-    * Get actual time and return number of seconds (float representation) since start of Clock.
-    * NOTE: This function does NOT increment "duration" clock, it just sets it.
-    *       If the timer is stopped and restarted many times, the duration will be erased.
-    */
-    {
-        if (is_started)
-            end.Get_Current_Time();
-
-        duration = end - start;
-    }
-
-    // **********************************************************
-    uint64_t Timer::Duration_Years()
-    /**
-    * Return how many years.
-    */
-    {
-        return uint64_t(std::floor(Get_Duration() / double(years_to_sec)));
-    }
-
-    // **********************************************************
-    uint64_t Timer::Duration_Days()
-    /**
-    * Return how many months (not including full years).
-    */
-    {
-        const uint64_t years = Duration_Years();
-        double remaining_seconds = std::max(0.0, Get_Duration() - double(years*years_to_sec));
-        return uint64_t(std::floor(remaining_seconds / double(days_to_sec)));
-    }
-
-    // **********************************************************
-    uint64_t Timer::Duration_Hours()
-    /**
-    * Return how many hours (not including full years or days).
-    */
-    {
-        const uint64_t years = Duration_Years();
-        const uint64_t days  = Duration_Days();
-        double remaining_seconds = std::max(0.0, Get_Duration() - double(years*years_to_sec) - double(days*days_to_sec));
-        return uint64_t(std::floor(remaining_seconds / double(hours_to_sec)));
-    }
-
-    // **********************************************************
-    uint64_t Timer::Duration_Minutes()
-    /**
-    * Return how many minutes (not including full years, days or hours).
-    */
-    {
-        const uint64_t years = Duration_Years();
-        const uint64_t days  = Duration_Days();
-        const uint64_t hours = Duration_Hours();
-        double remaining_seconds = std::max(0.0, Get_Duration() - double(years*years_to_sec) - double(days*days_to_sec) - double(hours*hours_to_sec));
-        return uint64_t(std::floor(remaining_seconds / double(min_to_sec)));
-    }
-
-    // **********************************************************
-    uint64_t Timer::Duration_Seconds()
-    /**
-    * Return how many minutes (not including full years, days, hours or minutes).
-    */
-    {
-        const uint64_t years    = Duration_Years();
-        const uint64_t days     = Duration_Days();
-        const uint64_t hours    = Duration_Hours();
-        const uint64_t minutes  = Duration_Minutes();
-        double remaining_seconds = std::max(0.0, Get_Duration() - double(years*years_to_sec) - double(days*days_to_sec) - double(hours*hours_to_sec) - double(minutes*min_to_sec));
-        return uint64_t(std::floor(remaining_seconds));
-    }
-
-    // **********************************************************
-    std::string Timer::Duration_Human_Readable()
-    /**
-    * Return the duration in human readable format
-    */
-    {
-        //const uint64_t years    = Duration_Years();
-        const uint64_t days     = Duration_Days();
-        const uint64_t hours    = Duration_Hours();
-        const uint64_t minutes  = Duration_Minutes();
-        const uint64_t seconds  = Duration_Seconds();
-
-        std::string duration_string;
-        if (days != 0)
-            duration_string += timing::IntToStr(days) + std::string("d");
-        if (hours != 0 or days != 0)
-            duration_string += timing::IntToStr(hours,2,'0') + std::string("h");
-        if (minutes != 0 or hours != 0 or days != 0)
-            duration_string += timing::IntToStr(minutes,2,'0') + std::string("m");
-        duration_string += timing::IntToStr(seconds,2,'0') + std::string("s");
-
-        return duration_string;
-    }
-
-    // **********************************************************
-    void Timer::Print() const
-    {
-        log("Timer::Print()   %p\n", (void *)this);
-        log("  Start:\n");
-        start.Print();
-        log("  End:\n");
-        end.Print();
-        log("  Duration:\n");
-        duration.Print();
-    }
-
-    // **********************************************************
-    void Eta::Init(const double _first_time, const double _duration)
-    {
-        first_time       = _first_time;
-        duration         = _duration;
-    }
-
-    // **********************************************************
-    std::string Eta::_Get_ETA(const double time) const
-    {
-        std::string eta_string("");
-
-        // Wait 0.5% before calculating an ETA to let the simulation stabilize.
-        if ((time - first_time)/duration < 5.0e-3)
-        {
-            eta_string = "-";
-        }
-        else
-        {
-            // ETA: Estimated Time of Arrival (s)
-            TimerTotal.Update_Duration();
-            const double elapsed_time = TimerTotal.Get_Duration();
-            const double eta = std::max(0.0, ((duration - first_time) / (time - first_time) - 1.0) * elapsed_time);
-
-            Timer tmp;
-            tmp.Clear();
-            tmp.Add_Seconds(eta);
-            eta_string = tmp.Duration_Human_Readable();
-        }
-
-        return eta_string;
+        Timer &new_timer = TimersMap[full_name];
+        new_timer.Set_Name(full_name, strict_name);
+        return new_timer;
     }
 
     // **********************************************************
@@ -370,6 +66,9 @@ namespace timing
         {
             it->second.Stop();
         }
+
+        // Set total timer's name manually
+        TimerTotal.Set_Name("Total", "Timing_Total");
 
         // Total timer's duration clock is updated at each time step. Clear it
         // because Stop() increments the duration using "duration = duration + (end - start)"
@@ -511,6 +210,50 @@ namespace timing
         strftime(date_out, timing_max_string_size, "%A, %B %dth %Y, %Hh%M:%S (%Y%m%d%H%M%S)", date_format);
         log("\nEnding time and date:\n    %s\n", date_out);
     }
+
+    // **************************************************************
+    void Create_Folder_If_Does_Not_Exists(const std::string path)
+    {
+        struct stat statBuf;
+        if (stat(path.c_str(), &statBuf) < 0)
+        {
+            std::string cmd = "mkdir -p " + path;
+            const int return_value = system(cmd.c_str());
+            if (return_value != 0)
+            {
+                log("ERROR: Folder '%s' could not be created correclty!\n");
+                log("       Disabling timing output.\n");
+                output_folder = "";
+            }
+        }
+    }
+
+    // **********************************************************
+    void Enable_Timers_Output(const std::string &_output_folder)
+    /**
+     * Store a non-empty string as the output folder to enable saving
+     * of the timing information to a file.
+     */
+    {
+        if (_output_folder == "")
+        {
+            log("WARNING: Setting an empty string for timing's output folder will disable its output!\n");
+            log("         To use the current folder, just use \"./\" instead.\n");
+        }
+        output_folder = _output_folder;
+        log("Timing information will be saved in \"%s\".\n", output_folder.c_str());
+        Create_Folder_If_Does_Not_Exists(output_folder);
+    }
+
+    // **********************************************************
+    void Set_Timers_Step(const uint64_t _step)
+    /**
+     * If saving timing information is desired, set the current time step.
+     */
+    {
+        timers_step = _step;
+    }
+
 } // namespace timing
 
 // ********** End of file ***************************************

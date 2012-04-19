@@ -18,11 +18,11 @@ int main(int argc, char *argv[])
     // Show some nice git informations about the working directory.
     timing::Log_Git_Info();
 
-    // This will create a new timing object called "Total".
-    TIMER_START("Total", Timing_Total);
+    // Enable saving the timing information in "output" folder.
+    TIMERS_ENABLE_OUTPUT("output");
 
     // Do heavy calculation here
-    const int max_t = 100000000;
+    const int max_t = 10000000;
 
     // Starting time is 0.0, end time is 3*max_t (two rounds of cosines and one of sines)
     static timing::Eta ETA = timing::Eta(0.0, double(3*max_t));
@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
     TIMER_START("cosine", Timing_Cosine);
     for (int t = 0 ; t < max_t ; t++)
     {
+        TIMERS_SET_STEP(t);
+
         const double tmp = std::cos(t);
 
         // Print only 10 ETA, else we are flooded...
@@ -43,6 +45,8 @@ int main(int argc, char *argv[])
     TIMER_START("sine", Timing_Sine);
     for (int t = 0 ; t < max_t ; t++)
     {
+        TIMERS_SET_STEP(max_t + t);
+
         const double tmp = std::sin(t);
 
         // Print only 10 ETA, else we are flooded...
@@ -56,6 +60,8 @@ int main(int argc, char *argv[])
     TIMER_START("cosine", Timing_Cosine2);
     for (int t = 0 ; t < max_t ; t++)
     {
+        TIMERS_SET_STEP(max_t + max_t + t);
+
         const double tmp = std::cos(t);
 
         // Print only 10 ETA, else we are flooded...
@@ -64,7 +70,9 @@ int main(int argc, char *argv[])
     }
     TIMER_STOP("cosine", Timing_Cosine2);
 
-    TIMER_STOP("Total", Timing_Total);
+    TIMER_START("Wait", Timing_Wait);
+    timing::Wait(2.123);
+    TIMER_STOP("Wait", Timing_Wait);
 
     timing::Print(max_t);
 
