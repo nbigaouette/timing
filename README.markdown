@@ -92,6 +92,15 @@ when TIMER_START() is called multiple times.
 Because TIMER_START() declares a static timer variable, previous timer values
 are preserved between calls even when timer gets out of scope.
 
+A script is provided to analyze the timers. Written in python 2, it requires
+Numpy and Matplotlib. The example timers provided can be plotted using:
+
+``` bash
+./analyze_timers.py -i output/ -t barh
+```
+The output figure [http://oi41.tinypic.com/15ympv.jpg](can be seen here).
+
+
 # Example
 
 Here's a simple example (see also example/Main.cpp)
