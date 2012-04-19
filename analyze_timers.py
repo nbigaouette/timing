@@ -14,6 +14,7 @@ from optparse import OptionParser
 parser = OptionParser()
 parser.add_option("-i", "--input", type=str,            dest="path",                   default=None,    help="Folder containing timers files [default: %default]")
 parser.add_option("-t", "--type",  type=str,            dest="types", action="append", default=None,    help="Type(s) of figure(s) (possibilities: barh, ts)")
+parser.add_option(      "--scale", action="store_true", dest="scale",                  default=False,   help="Scale time step plot by number of time steps [default: %default]")
 (options, args) = parser.parse_args()
 # ****************************************************************************************************************************************************
 
@@ -109,6 +110,11 @@ class Timer:
             plot_duration = self.duration
 
         delta_ts = 1.0
+        if (options.scale):
+            # Scale the duration by the number of time steps span.
+            delta_ts = plot_step[1::] - plot_step[0:-1:]
+            delta_ts = np.concatenate((np.array([plot_step[0]]), delta_ts))
+
         ax.semilogy(plot_step, plot_duration / delta_ts, color = colors[(self.t+1) % len(colors)], label = self.name)
 
 
