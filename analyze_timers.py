@@ -12,7 +12,7 @@ import datetime as dt
 # http://docs.python.org/library/optparse.html
 from optparse import OptionParser
 parser = OptionParser()
-parser.add_option("-i", "--input", type=str, dest="path", default=None, help="Folder containing timers files [default: %default]")
+parser.add_option("-i", "--input", type=str,            dest="path",                   default=None,    help="Folder containing timers files [default: %default]")
 (options, args) = parser.parse_args()
 # ****************************************************************************************************************************************************
 
