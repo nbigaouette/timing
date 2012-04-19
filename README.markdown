@@ -98,7 +98,7 @@ Numpy and Matplotlib. The example timers provided can be plotted using:
 ``` bash
 ./analyze_timers.py -i output/ -t barh
 ```
-The output figure [http://oi41.tinypic.com/15ympv.jpg](can be seen here).
+The output figure [can be seen here](http://oi41.tinypic.com/15ympv.jpg).
 
 
 # Example
