@@ -194,6 +194,15 @@ namespace timing
         strftime(date_out, timing_max_string_size, "%A, %B %dth %Y, %Hh%M:%S (%Y%m%d%H%M%S)", date_format);
         log("\nEnding time and date:\n    %s\n", date_out);
     }
+
+    // **********************************************************
+    void Enable_Timers_Output(const std::string &_output_folder)
+    /**
+     * Store a non-empty string as the output folder to enable saving
+     * of the timing information to a file.
+     */
+    {
+    }
 } // namespace timing
 
 // ********** End of file ***************************************

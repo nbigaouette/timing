@@ -24,9 +24,12 @@
         Timer_name.Start();
     #define TIMER_STOP(name, Timer_name) \
         Timer_name.Stop();
+    #define TIMERS_ENABLE_OUTPUT(output_folder) \
+        timing::Enable_Timers_Output(output_folder);
 #else // #ifndef DISABLE_TIMING
     #define TIMER_START(name, Timer_name)       {}
     #define TIMER_STOP(name, Timer_name)        {}
+    #define TIMERS_ENABLE_OUTPUT(output_folder) {}
 #endif // #ifndef DISABLE_TIMING
 
 // **************************************************************
@@ -49,6 +52,7 @@ namespace timing
 #endif // #ifndef DISABLE_TIMING
 
     void Stop_All_Timers();
+    void Enable_Timers_Output(const std::string &_output_folder);
 
     // **********************************************************
     template <class Integer>
