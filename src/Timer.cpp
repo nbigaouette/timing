@@ -28,6 +28,8 @@ namespace timing
     // **********************************************************
     void Timer::Set_Name(const std::string &_name)
     {
+        name = _name;
+        output_filename = output_folder + "/" + name + ".csv";
     }
 
     // **********************************************************
