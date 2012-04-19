@@ -89,11 +89,7 @@ class Timer:
                 )
 
             # Add timer name
-            half_duration = self.dates_dur[i].total_seconds() / 2.0
-            dates_half_dur= dt.timedelta(seconds = half_duration)
-            text_x = self.dates_start[i] + dates_half_dur
-            #text_x = self.duration[i]/2.0
-            #text_x = self.duration[i]
+            text_x = self.dates_start[i] + dt.timedelta(seconds = self.dates_dur[i].total_seconds() / 2.0)
             ax.text(text_x, ypos, self.name, horizontalalignment='center',
                     verticalalignment='center', color='black')
 
