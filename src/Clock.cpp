@@ -122,9 +122,11 @@ namespace timing
         // sleeping will not be counted!
         //const int return_value = clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &(this->timer));
         // "CLOCK_REALTIME" might have trouble in 2038 and is affected by clock changes (NTP)
-        //const int return_value = clock_gettime(CLOCK_REALTIME, &(this->timer));
-        // "CLOCK_MONOTONIC" should be the most reliable clock
-        const int return_value = clock_gettime(CLOCK_MONOTONIC, &(this->timer));
+        // It starts at epoc (1970)
+        const int return_value = clock_gettime(CLOCK_REALTIME, &(this->timer));
+        // "CLOCK_MONOTONIC" is reliable clock, but measures RELATIVE time!
+        // It does NOT start at epoc!
+        //const int return_value = clock_gettime(CLOCK_MONOTONIC, &(this->timer));
         if (return_value != 0)
         {
             log("ERROR: Failed calling clock_gettime()\n");
