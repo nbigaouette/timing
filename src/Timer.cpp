@@ -32,6 +32,9 @@ namespace timing
 
     // **********************************************************
     Timer::Timer()
+    /**
+     * Default constructor.
+     */
     {
         Clear();
         Start();
