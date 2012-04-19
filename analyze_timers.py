@@ -45,12 +45,12 @@ if (not os.path.exists(full_path)):
 
 # Get a list of all timers
 timer_files = glob.glob(os.path.join(full_path, "*"))
-# Place "Total" timer file at top
-timer_files.sort()
-timer_files = timer_files[::-1]
+# Place "Total" timer file at first
+timer_files.sort()                  # Sort
 Total_filename = os.path.join(full_path, "Timing_Total.csv")
-timer_files.remove(Total_filename) # Remove it
-timer_files.append(Total_filename) # Add it back at end
+timer_files.remove(Total_filename)  # Remove total timer from list
+timer_files.append(Total_filename)  # Add it back at end
+timer_files = timer_files[::-1]     # Inverse the order: Total is at beginning
 
 colors = ['blue', 'red', 'magenta', 'green', 'cyan', 'black', 'yellow']
 
@@ -96,16 +96,16 @@ class Timer:
 
     def plot_hbar(self, fig, ax):
         print "Plotting \"" + self.name + "\""
-        ypos = np.arange(self.t, self.t+1)+0.5
+        # Start y position from the top of the figure and go down.
+        ypos = self.nb_timers - np.arange(self.t, self.t+1)+0.5
         left = mpl.dates.date2num(self.dates_start)
         self.rects = []
         for i in xrange(self.nb):
             # Width is expected in days. Change seconds to days.
             width = self.dates_dur[i].total_seconds() / (60.0 * 60.0 * 24.0)
-            # +1 in colors array to make sure that "Total" timer gets blue, even if at the end of the list
             self.rects.append(
                     ax.barh(bottom=ypos, width=width, left=left[i],
-                            align='center', height=1.0, color=colors[(self.t+1) % len(colors)],
+                            align='center', height=1.0, color=colors[self.t % len(colors)],
                             alpha = 0.6)
                 )
 
