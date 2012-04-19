@@ -25,8 +25,8 @@
     #define TIMER_STOP(name, Timer_name) \
         Timer_name.Stop();
 #else // #ifndef DISABLE_TIMING
-    #define TIMER_START(name, Timer_name) {}
-    #define TIMER_STOP(name, Timer_name)  {}
+    #define TIMER_START(name, Timer_name)       {}
+    #define TIMER_STOP(name, Timer_name)        {}
 #endif // #ifndef DISABLE_TIMING
 
 // **************************************************************
