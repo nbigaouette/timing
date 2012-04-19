@@ -137,6 +137,7 @@ namespace timing
             Clock start;
             Clock end;
             Clock duration;
+            Clock current_duration;
 
             // Used in output
             std::string   name;
@@ -155,6 +156,7 @@ namespace timing
             time_t Get_Duration_Seconds() const;
             long Get_Duration_NanoSeconds() const;
             double Get_Duration() const;
+            double Get_Current_Duration() const;
             void Update_Duration();
             uint64_t Duration_Years();
             uint64_t Duration_Days();

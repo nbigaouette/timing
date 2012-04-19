@@ -68,6 +68,7 @@ namespace timing
         is_started = false;
         start.Clear();
         end.Clear();
+        current_duration.Clear();
         duration.Clear();
     }
 
@@ -87,7 +88,8 @@ namespace timing
             is_started = false;
 
             end.Get_Current_Time();
-            duration = duration + (end - start);
+            current_duration = end - start;
+            duration = duration + current_duration;
         }
 
         // Save timing information
@@ -107,7 +109,7 @@ namespace timing
                         log("ERROR: Could not open file \"%s\"!\n", output_filename.c_str());
                     else
                     {
-                        output_file << "#    Step,           Start         , Duration\n";
+                        output_file << "#    Step,               Start            , Duration\n";
                     }
                 }
 
@@ -116,7 +118,7 @@ namespace timing
                     log("ERROR: Could not open file \"%s\"!\n", output_filename.c_str());
                 else
                 {
-                    output_file << std::setw(9) << timers_step << ", " << start.Get_Time() << ", " << Get_Duration() << "\n";
+                    output_file << std::setw(9) << timers_step << ", " << start.Get_Time() << ", " << Get_Current_Duration() << "\n";
                 }
             }
             else
@@ -159,6 +161,16 @@ namespace timing
     */
     {
         return duration.Get_nsec();
+    }
+
+    // **********************************************************
+    double Timer::Get_Current_Duration() const
+    /**
+    * Returns Clock's elapsed duration in seconds (float representation)
+    * Only the current duration is returned, not the total cumulative.
+    */
+    {
+        return double(current_duration.Get_sec()) + double(current_duration.Get_nsec()) / double(timing::TenToNine);
     }
 
     // **********************************************************
@@ -275,7 +287,9 @@ namespace timing
         start.Print();
         log("  End:\n");
         end.Print();
-        log("  Duration:\n");
+        log("  Current Duration:\n");
+        current_duration.Print();
+        log("  Total Duration:\n");
         duration.Print();
     }
 } // namespace timing
