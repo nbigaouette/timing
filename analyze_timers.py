@@ -13,11 +13,16 @@ import datetime as dt
 from optparse import OptionParser
 parser = OptionParser()
 parser.add_option("-i", "--input", type=str,            dest="path",                   default=None,    help="Folder containing timers files [default: %default]")
+parser.add_option("-t", "--type",  type=str,            dest="types", action="append", default=None,    help="Type(s) of figure(s) (possibilities: barh)")
 (options, args) = parser.parse_args()
 # ****************************************************************************************************************************************************
 
 if (options.path == None):
     print "ERROR: Please use -i/--input to point to a folder where to load timers information."
+    sys.exit(0)
+
+if (options.types == None):
+    print "ERROR: Please at least one type of figure using --t/--type."
     sys.exit(0)
 
 #full_path = os.path.abspath(options.path)
@@ -116,15 +121,19 @@ for t in xrange(nb_timers):
 # Plot
 fig = plt.figure()
 ax = fig.add_subplot(111)
-plt.setp(ax.get_yticklabels(), visible=False)
-for t in xrange(nb_timers):
-    timers[t].plot_hbar(fig, ax)
-ax.xaxis_date()
 
-ax.xaxis.set_major_formatter(mpl.dates.DateFormatter('%H:%M:%S'))
-ax.xaxis.set_major_locator(mpl.dates.SecondLocator(interval=1))
+for figue_type in options.types:
+    if (figue_type == "barh"):
+        plt.setp(ax.get_yticklabels(), visible=False)
+        for t in xrange(nb_timers):
+            timers[t].plot_hbar(fig, ax)
+        ax.xaxis_date()
 
-ax.grid(True)
+        ax.xaxis.set_major_formatter(mpl.dates.DateFormatter('%H:%M:%S'))
+        ax.xaxis.set_major_locator(mpl.dates.SecondLocator(interval=1))
+
+        ax.grid(True)
+
 
 plt.show()
 
