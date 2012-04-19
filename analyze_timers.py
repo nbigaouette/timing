@@ -62,7 +62,7 @@ class Timer:
 
         #print "data =", self.data
 
-        self.step       = self.data[:,0]
+        self.step       = np.array(self.data[:,0], int)
         self.start      = self.data[:,1]
         self.duration   = self.data[:,2]
 
