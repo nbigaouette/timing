@@ -101,7 +101,7 @@ namespace timing
                         log("ERROR: Could not open file \"%s\"!\n", output_filename.c_str());
                     else
                     {
-                        output_file << "# Step,           Start         , Duration\n";
+                        output_file << "#    Step,           Start         , Duration\n";
                     }
                 }
 
@@ -110,7 +110,7 @@ namespace timing
                     log("ERROR: Could not open file \"%s\"!\n", output_filename.c_str());
                 else
                 {
-                    output_file << std::setw(6) << timers_step << ", " << start.Get_Time() << ", " << Get_Duration() << "\n";
+                    output_file << std::setw(9) << timers_step << ", " << start.Get_Time() << ", " << Get_Duration() << "\n";
                 }
             }
             else
