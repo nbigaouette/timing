@@ -11,6 +11,13 @@
 #include <stdint.h> // (u)int64_t
 #include <fstream>
 
+// Quote something, usefull to quote a macro's value
+#ifndef _QUOTEME
+#define _QUOTEME(x) #x
+#endif // #ifndef _QUOTEME
+#ifndef QUOTEME
+#define QUOTEME(x) _QUOTEME(x)
+#endif // #ifndef QUOTEME
 
 // **************************************************************
 // Define useful macros.
