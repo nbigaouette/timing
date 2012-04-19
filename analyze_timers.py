@@ -146,15 +146,19 @@ ax = fig.add_subplot(111)
 
 for figue_type in options.types:
     if (figue_type == "barh"):
-        plt.setp(ax.get_yticklabels(), visible=False)
         for t in xrange(nb_timers):
             timers[t].plot_hbar(fig, ax)
-        ax.xaxis_date()
 
+        # Hide y-ticks (useless)
+        plt.setp(ax.get_yticklabels(), visible=False)
+        # Set the x-axis a date axis
+        ax.xaxis_date()
+        # Set formatter
         ax.xaxis.set_major_formatter(mpl.dates.DateFormatter('%H:%M:%S'))
         ax.xaxis.set_major_locator(mpl.dates.SecondLocator(interval=1))
-
+        # Enable grid
         ax.grid(True)
+
     elif (figue_type == "ts"):
         for t in xrange(nb_timers):
             timers[t].plot_timesteps(fig, ax)
