@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     TIMERS_ENABLE_OUTPUT("output");
 
     // Do heavy calculation here
-    const int max_t = 100000000;
+    const int max_t = 10000000;
 
     // Starting time is 0.0, end time is 3*max_t (two rounds of cosines and one of sines)
     static timing::Eta ETA = timing::Eta(0.0, double(3*max_t));
