@@ -270,7 +270,7 @@ namespace timing
     // **********************************************************
     void Timer::Print() const
     {
-        log("Timer::Print()   %p\n", (void *)this);
+        log("Timer::Print() name: %s (%p)\n", name.c_str(), (void *)this);
         log("  Start:\n");
         start.Print();
         log("  End:\n");
