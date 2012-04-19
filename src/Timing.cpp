@@ -16,8 +16,11 @@
 
 namespace timing
 {
-    std::map<std::string, Timer> TimersMap;
+    // **********************************************************
+    // Variables global to the library but hidden from program
 
+    // Map dynamically containing all timers
+    std::map<std::string, Timer> TimersMap;
     // This is a timer that keeps track of the total running time.
     // The constructor starts it automatically.
     // This is needed for ETA calculation.
