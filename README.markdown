@@ -57,7 +57,7 @@ $ make gcc install DESTIR=/usr
 ```
 
 
-# Example
+# Usage
 
 Note(s):
 
@@ -68,6 +68,33 @@ Note(s):
   of a running program. Calling its Get_ETA() member function returns a string
   containing the ETA.
 
+Timers are accessed through four macros. These macros are:
+ * TIMER_START("Timer name", Timer_variable_name) Start a timer.
+ * TIMER_STOP("Timer name", Timer_variable_name)  Stop a timer. Both arguments
+   must match TIMER_START()'s
+ * TIMERS_ENABLE_OUTPUT("output_folder") Enable saving of timers information in
+   folder "output_folder". Every time TIMER_STOP() is called, the timer's
+   information will be saved. Note that the amount of data can increase fast
+   so don't enable blindly.
+ * TIMERS_SET_STEP(step) Set the current step/iteration. Only used when timers
+   information is saved.
+
+For each TIMER_START() there must be a matching TIMER_STOP() with the exact
+same parameters.
+
+The first argument to these is a string identifying the timer. This name can
+be anything and will be printed when timing::Print() is called.
+The second argument is the name of the timer's variable and must
+be a valid C++ variable name. This name _must_ be unique to a single
+TIMER_START() and TIMER_STOP() pair to prevent redeclaration from the macro
+when TIMER_START() is called multiple times.
+
+Because TIMER_START() declares a static timer variable, previous timer values
+are preserved between calls even when timer gets out of scope.
+
+# Example
+
+Here's a simple example (see also example/Main.cpp)
 ``` bash
 $ cat timing_test.cpp
 ```
@@ -80,8 +107,8 @@ int main()
     // Show some nice git informations about the working directory.
     timing::Log_Git_Info();
 
-    // This will create a new timing object called "Total".
-    TIMER_START("Total", Timing_Total);
+    // Enable saving the timing information in "output" folder.
+    TIMERS_ENABLE_OUTPUT("output");
 
     // Do heavy calculation here
     const int max_t = 100000000;
@@ -126,7 +153,10 @@ int main()
     }
     TIMER_STOP("cosine", Timing_Cosine2);
 
-    TIMER_STOP("Total", Timing_Total);
+    // Wait/sleep 2.123 seconds and measure it.
+    TIMER_START("Wait", Timing_Wait);
+    timing::Wait(2.123);
+    TIMER_STOP("Wait", Timing_Wait);
 
     timing::Print(max_t);
 
@@ -193,39 +223,6 @@ ETA: 00s
 Ending time and date:
     Tuesday, April 17th 2012, 19h14:02 (20120417191402)
 ```
-
-# Detailed usage
-
-``` C++
-TIMER_START("sine", Timing_Sine);
-TIMER_STOP("sine", Timing_Sine);
-```
-
-TIMER_START() and TIMER_STOP() are macros. For each TIMER_START() there must be a matching
-TIMER_STOP() with the exact same parameters.
-
-The first argument to the macros is a string identifying the timer. This
-is the name that will appear in timing::Print()'s output.
-The second argument is the name a timer will have. Note that this name
-_must_ be unique to a TIMER_START() and TIMER_STOP() pair since TIMER_START()
-expands to:
-
-``` C++
-static timing::Timer &Timer_name = timing::New_Timer(name);
-Timer_name.Reset();
-```
-
-The *static* attribute of the timer allows a function containing timers
-to be re-called later on and increment the same timer.
-
-Note that the second argument gives "Timer_name", so if multiple calls
-of TIMER_START() are performed with the same second argument, multiple
-declarations of the timer will be done and will result in a redeclaration error.
-So make sure the timer names are unique. The first argument does not have to be
-unique. Actually, this is how the timers are identified. See the example.
-
-You can either use the macros or an equivalent of their expansion. The macros
-are useful to simplify what gets included in the main program.
 
 
 # License
