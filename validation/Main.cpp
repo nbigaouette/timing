@@ -18,8 +18,6 @@ int main(int argc, char *argv[])
     // Show some nice git informations about the working directory.
     timing::Log_Git_Info();
 
-    // This will create a new timing object called "Total".
-    TIMER_START("Total", Timing_Total);
 
     // Do heavy calculation here
     const int max_t = 100000000;
@@ -63,8 +61,6 @@ int main(int argc, char *argv[])
             std::cout << "ETA: " << ETA.Get_ETA(double(max_t + max_t + t)) << "\n";
     }
     TIMER_STOP("cosine", Timing_Cosine2);
-
-    TIMER_STOP("Total", Timing_Total);
 
     timing::Print(max_t);
 
