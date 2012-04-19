@@ -42,7 +42,7 @@ Total_filename = os.path.join(full_path, "Timing_Total.csv")
 timer_files.remove(Total_filename) # Remove it
 timer_files.append(Total_filename) # Add it back at end
 
-colors = ['blue', 'red', 'magenta']
+colors = ['blue', 'red', 'magenta', 'green', 'cyan', 'black', 'yellow']
 
 class Timer:
     def __init__(self, timer_file):
