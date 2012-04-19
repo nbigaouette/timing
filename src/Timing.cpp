@@ -12,6 +12,7 @@
 
 #include <cstdlib>
 #include <cstring> // memset()
+#include <sys/stat.h> // Check if folder exists
 
 namespace timing
 {
@@ -21,6 +22,10 @@ namespace timing
     // The constructor starts it automatically.
     // This is needed for ETA calculation.
     Timer TimerTotal;
+
+    // **********************************************************
+    // Local to this file function declarations
+    void Create_Folder_If_Does_Not_Exists(const std::string path);
 
     // **********************************************************
     Timer & New_Timer(const std::string &name)
@@ -193,6 +198,23 @@ namespace timing
         date_format = localtime(&rawtime);
         strftime(date_out, timing_max_string_size, "%A, %B %dth %Y, %Hh%M:%S (%Y%m%d%H%M%S)", date_format);
         log("\nEnding time and date:\n    %s\n", date_out);
+    }
+
+    // **************************************************************
+    void Create_Folder_If_Does_Not_Exists(const std::string path)
+    {
+        struct stat statBuf;
+        if (stat(path.c_str(), &statBuf) < 0)
+        {
+            std::string cmd = "mkdir -p " + path;
+            const int return_value = system(cmd.c_str());
+            if (return_value != 0)
+            {
+                log("ERROR: Folder '%s' could not be created correclty!\n");
+                log("       Disabling timing output.\n");
+                output_folder = "";
+            }
+        }
     }
 
     // **********************************************************
