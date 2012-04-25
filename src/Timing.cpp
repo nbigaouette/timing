@@ -109,7 +109,7 @@ namespace timing
     }
 
     // **********************************************************
-    void _Print(const uint64_t nt)
+    void _Print(const uint64_t nt, const uint64_t terminal_width)
     /**
      *
      *  @param  nt  Number of time steps (iterations) done in the main program.
@@ -135,10 +135,18 @@ namespace timing
         const size_t total_length_minus_longest = 51;
         const size_t total_length = total_length_minus_longest + longest_length; // Does not include the first and last "|"
 
-        // Center the table inside 128 columns
-        const size_t length_max = 128;
+        // Center the table inside the terminal width
+        // 128 columns if terminal_width == 0 (default parameter)
+        // Left justified if terminal_width == 1
+        // Else: the maximum between terminal_width and the table width will be used
+        const size_t length_max = (terminal_width == 0 ? 128 : (terminal_width == 1 ? total_length : std::max(terminal_width, total_length)));
         const size_t length_s = size_t(std::floor(double(length_max - total_length+2) / 2.0));
         const std::string s(length_s, ' ');
+
+        if (terminal_width > 1)
+        {
+            assert(terminal_width >= terminal_width);
+        }
 
         log("%s", s.c_str());
         Print_N_Times("_", total_length+2);
