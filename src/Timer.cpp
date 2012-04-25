@@ -77,9 +77,13 @@ namespace timing
     // **********************************************************
     void Timer::Start()
     {
+        if (not is_started)
+        {
+            ++counter;
+            output_has_been_performed = false;
+            start.Get_Current_Time();
+        }
         is_started = true;
-        output_has_been_performed = false;
-        start.Get_Current_Time();
     }
 
     // **********************************************************
