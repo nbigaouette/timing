@@ -134,6 +134,7 @@ namespace timing
     {
         private:
             bool is_started;
+            uint64_t counter;
             Clock start;
             Clock end;
             Clock duration;
@@ -152,6 +153,7 @@ namespace timing
             void Clear();
             void Start();
             void Stop();
+            uint64_t Get_Counter() const;
             void Add_Seconds(const double seconds);
             time_t Get_Duration_Seconds() const;
             long Get_Duration_NanoSeconds() const;
