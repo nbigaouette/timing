@@ -136,8 +136,8 @@ namespace timing
         const size_t total_length = total_length_minus_longest + longest_length; // Does not include the first and last "|"
 
         // Center the table inside the terminal width
-        // 128 columns if terminal_width == 0 (default parameter)
-        // Left justified if terminal_width == 1
+        // 128 columns if terminal_width == 0
+        // Left justified if terminal_width == 1 (default parameter)
         // Else: the maximum between terminal_width and the table width will be used
         const size_t length_max = (terminal_width == 0 ? 128 : (terminal_width == 1 ? total_length : std::max(terminal_width, total_length)));
         const size_t length_s = size_t(std::floor(double(length_max - total_length+2) / 2.0));
