@@ -100,15 +100,16 @@ namespace timing
         timer_name_w_spaces = timer_name;
         timer_name_w_spaces.resize(longest_length, ' ');
 
-        log("%s|", s.c_str());
-        log(" %s ", timer_name_w_spaces.c_str());
-        log("| %10.5g | %13.6g | ", timer.Get_Duration(), timer.Get_Duration() / double(nt));
-
-        log("%10.2f |\n", (timer.Get_Duration() / TimerTotal.Get_Duration())*100.0);
+        log("%s| %s | %10.5g | %13.6g | %12llu | %6.2f |\n", s.c_str(),
+                                                             timer_name_w_spaces.c_str(),
+                                                             timer.Get_Duration(),
+                                                             timer.Get_Duration() / double(nt),
+                                                             timer.Get_Counter(),
+                                                             (timer.Get_Duration() / TimerTotal.Get_Duration())*100.0);
     }
 
     // **********************************************************
-    void _Print(const uint64_t nt)
+    void _Print(const uint64_t nt, const uint64_t terminal_width)
     /**
      *
      *  @param  nt  Number of time steps (iterations) done in the main program.
@@ -131,13 +132,21 @@ namespace timing
         std::string total_human_readable("Total (human readable)");
         const std::string timings("Timing of different code aspects");
         longest_length = std::max(longest_length, total_human_readable.length());
-        const size_t total_length_minus_longest = 44;
+        const size_t total_length_minus_longest = 55;
         const size_t total_length = total_length_minus_longest + longest_length; // Does not include the first and last "|"
 
-        // Center the table inside 128 columns
-        const size_t length_max = 128;
+        // Center the table inside the terminal width
+        // 128 columns if terminal_width == 0
+        // Left justified if terminal_width == 1 (default parameter)
+        // Else: the maximum between terminal_width and the table width will be used
+        const size_t length_max = (terminal_width == 0 ? 128 : (terminal_width == 1 ? total_length : std::max(terminal_width, total_length)));
         const size_t length_s = size_t(std::floor(double(length_max - total_length+2) / 2.0));
         const std::string s(length_s, ' ');
+
+        if (terminal_width > 1)
+        {
+            assert(terminal_width >= terminal_width);
+        }
 
         log("%s", s.c_str());
         Print_N_Times("_", total_length+2);
@@ -168,15 +177,15 @@ namespace timing
             Print_N_Times(" ", length_right, false);
             log("|");
         }
-        log("          Duration          | Percentage |\n");
+        log("          Duration          | Number times | Total  |\n");
 
         log("%s|", s.c_str());
         Print_N_Times(" ", longest_length+2, false);
-        log("|  seconds   | per time step | over total |\n");
+        log("|  seconds   | per time step |    called    |   %c    |\n", '%');
 
         log("%s|", s.c_str());
         Print_N_Times("-", longest_length+2, false);
-        log("|------------|---------------|------------|\n");
+        log("|------------|---------------|--------------|--------|\n");
 
         for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end(); ++it )
         {
@@ -185,17 +194,17 @@ namespace timing
 
         log("%s|", s.c_str());
         Print_N_Times("-", longest_length+2, false);
-        log("|------------|---------------|------------|\n");
+        log("|------------|---------------|--------------|--------|\n");
 
         // Print total last
         Print_Code_Aspect(s, TimerTotal, "Total", longest_length, nt);
 
         log("%s|", s.c_str());
         Print_N_Times("-", longest_length+2, false);
-        log("|-----------------------------------------|\n");
+        log("|----------------------------------------------------|\n");
 
         total_human_readable.resize(longest_length, ' ');
-        log("%s| %s | %39s |\n", s.c_str(), total_human_readable.c_str(), TimerTotal.Duration_Human_Readable().c_str());
+        log("%s| %s | %50s |\n", s.c_str(), total_human_readable.c_str(), TimerTotal.Duration_Human_Readable().c_str());
 
         log("%s|", s.c_str());
         Print_N_Times("-", total_length, false);

@@ -60,12 +60,14 @@ namespace timing
         duration        = other.duration;
         name            = other.name;
         output_filename = other.output_filename;
+        counter         = other.counter;
     }
 
     // **********************************************************
     void Timer::Clear()
     {
         is_started = false;
+        counter = 0;
         start.Clear();
         end.Clear();
         current_duration.Clear();
@@ -75,9 +77,13 @@ namespace timing
     // **********************************************************
     void Timer::Start()
     {
+        if (not is_started)
+        {
+            ++counter;
+            output_has_been_performed = false;
+            start.Get_Current_Time();
+        }
         is_started = true;
-        output_has_been_performed = false;
-        start.Get_Current_Time();
     }
 
     // **********************************************************
@@ -130,6 +136,12 @@ namespace timing
 
             output_has_been_performed = true;
         }
+    }
+
+    // **********************************************************
+    uint64_t Timer::Get_Counter() const
+    {
+        return counter;
     }
 
     // **********************************************************
