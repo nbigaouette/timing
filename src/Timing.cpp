@@ -100,11 +100,11 @@ namespace timing
         timer_name_w_spaces = timer_name;
         timer_name_w_spaces.resize(longest_length, ' ');
 
-        log("%s|", s.c_str());
-        log(" %s ", timer_name_w_spaces.c_str());
-        log("| %10.5g | %13.6g | ", timer.Get_Duration(), timer.Get_Duration() / double(nt));
-
-        log("%10.2f |\n", (timer.Get_Duration() / TimerTotal.Get_Duration())*100.0);
+        log("%s| %s | %10.5g | %13.6g | %10.2f |\n", s.c_str(),
+                                                     timer_name_w_spaces.c_str(),
+                                                     timer.Get_Duration(),
+                                                     timer.Get_Duration() / double(nt),
+                                                     (timer.Get_Duration() / TimerTotal.Get_Duration())*100.0);
     }
 
     // **********************************************************
