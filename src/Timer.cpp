@@ -55,12 +55,14 @@ namespace timing
      */
     {
         is_started      = other.is_started;
+        counter         = other.counter;
         start           = other.start;
         end             = other.end;
         duration        = other.duration;
+        current_duration= other.current_duration;
         name            = other.name;
         output_filename = other.output_filename;
-        counter         = other.counter;
+        output_has_been_performed = other.output_has_been_performed;
     }
 
     // **********************************************************
