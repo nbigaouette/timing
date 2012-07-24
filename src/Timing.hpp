@@ -55,11 +55,11 @@ namespace timing
     Timer & New_Timer(const std::string &full_name, const std::string &strict_name);
     void Wait(const double seconds);
     void Print_N_Times(const std::string x, const size_t N, const bool newline = true);
-    void _Print(const uint64_t nt, const uint64_t terminal_width);
+    void _Print(const uint64_t nt, const size_t terminal_width);
 #ifndef DISABLE_TIMING
-    inline void Print(const uint64_t nt, const uint64_t terminal_width = 1) { _Print(nt, terminal_width);   }
+    inline void Print(const uint64_t nt, const size_t terminal_width = 1) { _Print(nt, terminal_width);   }
 #else // #ifndef DISABLE_TIMING
-    inline void Print(const uint64_t nt, const uint64_t terminal_width = 1) { /* Don't do anything */       }
+    inline void Print(const uint64_t nt, const size_t terminal_width = 1) { /* Don't do anything */       }
 #endif // #ifndef DISABLE_TIMING
 
     void Stop_All_Timers();

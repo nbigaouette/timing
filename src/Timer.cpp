@@ -62,7 +62,7 @@ namespace timing
         current_duration= other.current_duration;
         name            = other.name;
         output_filename = other.output_filename;
-        output_has_been_performed = other.output_has_been_performed;
+        output_has_been_performed = false;
     }
 
     // **********************************************************
@@ -101,7 +101,7 @@ namespace timing
         }
 
         // Save timing information
-        if (not output_has_been_performed and output_folder != "")
+        if (not output_has_been_performed and not output_folder.empty())
         {
             if (output_filename != "")
             {

@@ -109,7 +109,7 @@ namespace timing
     }
 
     // **********************************************************
-    void _Print(const uint64_t nt, const uint64_t terminal_width)
+    void _Print(const uint64_t nt, const size_t terminal_width)
     /**
      *
      *  @param  nt  Number of time steps (iterations) done in the main program.
