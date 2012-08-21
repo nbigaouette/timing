@@ -60,6 +60,12 @@ namespace timing
     }
 
     // **********************************************************
+    double Get_Total_Duration()
+    {
+        return TimerTotal.Get_Duration();
+    }
+
+    // **********************************************************
     void Stop_All_Timers()
     {
         for (std::map<std::string, Timer>::iterator it = TimersMap.begin() ; it != TimersMap.end() ; ++it)
