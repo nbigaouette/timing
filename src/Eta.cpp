@@ -54,6 +54,7 @@ namespace timing
 
         return eta_string;
     }
+
 } // namespace timing
 
 // ********** End of file ***************************************
