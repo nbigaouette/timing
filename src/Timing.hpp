@@ -193,6 +193,30 @@ namespace timing
             std::string Get_ETA(const double time) const            { return std::string("-");      }
 #endif // #ifndef DISABLE_TIMING
     };
+
+    // **********************************************************
+    class TimestepTiming
+    {
+        private:
+            Timer TimerBetweenTimesteps;
+            double elapsed_time;
+            uint64_t prev_t, nb_timesteps;
+
+            void    Update(const uint64_t t, const double time);
+            double _Seconds_per_Timestep(const uint64_t t, const double time);
+            double _Timesteps_per_Second(const uint64_t t, const double time);
+
+        public:
+            TimestepTiming();
+#ifndef DISABLE_TIMING
+            inline double Seconds_per_Timestep(const uint64_t t, const double time) { return _Seconds_per_Timestep(t, time); }
+            inline double Timesteps_per_Second(const uint64_t t, const double time) { return _Timesteps_per_Second(t, time); }
+#else // #ifndef DISABLE_TIMING
+            inline double Seconds_per_Timestep(const uint64_t t, const double time) { /* Don't do anything */                }
+            inline double Timesteps_per_Second(const uint64_t t, const double time) { /* Don't do anything */                }
+#endif // #ifndef DISABLE_TIMING
+    };
+
 } // namespace timing
 
 #endif // #ifndef _INC_TIMING_hpp
