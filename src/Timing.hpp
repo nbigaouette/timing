@@ -212,11 +212,14 @@ namespace timing
             TimestepTiming();
 #ifndef DISABLE_TIMING
             inline double Seconds_per_Timestep(const uint64_t t, const double time) { return _Seconds_per_Timestep(t); }
+            inline double Seconds_per_Timestep(const uint64_t t)                    { return _Seconds_per_Timestep(t); }
             inline double Timesteps_per_Second(const uint64_t t, const double time) { return _Timesteps_per_Second(t); }
             inline double Timesteps_per_Second(const uint64_t t)                    { return _Timesteps_per_Second(t); }
 #else // #ifndef DISABLE_TIMING
             inline double Seconds_per_Timestep(const uint64_t t, const double time) { /* Don't do anything */                }
+            inline double Seconds_per_Timestep(const uint64_t t)                    { /* Don't do anything */                }
             inline double Timesteps_per_Second(const uint64_t t, const double time) { /* Don't do anything */                }
+            inline double Timesteps_per_Second(const uint64_t t)                    { /* Don't do anything */                }
 #endif // #ifndef DISABLE_TIMING
     };
 
