@@ -14,19 +14,24 @@ namespace timing
     TimestepTiming::TimestepTiming()
     {
         elapsed_time    = 0.0;
-        prev_t          = std::numeric_limits<uint64_t>::max();
+        prev_t          = -1;
+        prev_duration   = 0.0;
         nb_timesteps    = 0;
+        TimerBetweenTimesteps.Start();
     }
 
     // **********************************************************
     void TimestepTiming::Update(const uint64_t t, const double time)
     {
-        if (t < prev_t)
+        if (prev_t < t)
         {
             TimerBetweenTimesteps.Update_Duration();
-            elapsed_time = TimerTotal.Get_Duration();
+            const double prev_duration_tmp = TimerBetweenTimesteps.Get_Duration();
+            elapsed_time = prev_duration_tmp - prev_duration;
+            prev_duration = prev_duration_tmp;
             nb_timesteps = t - prev_t;
         }
+        prev_t = t;
     }
 
     // **********************************************************
@@ -34,7 +39,10 @@ namespace timing
     {
         Update(t, time);
 
-        return double(nb_timesteps) / elapsed_time;
+        if (nb_timesteps == 0 || std::abs(elapsed_time) < 1.0e-5)
+            return 0.0;
+        else
+            return double(nb_timesteps) / elapsed_time;
     }
 
     // **********************************************************

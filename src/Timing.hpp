@@ -202,6 +202,7 @@ namespace timing
             Timer TimerBetweenTimesteps;
             double elapsed_time;
             uint64_t prev_t, nb_timesteps;
+            double prev_duration;
 
             void    Update(const uint64_t t, const double time);
             double _Seconds_per_Timestep(const uint64_t t, const double time);
