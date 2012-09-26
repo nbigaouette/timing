@@ -21,7 +21,7 @@ namespace timing
     }
 
     // **********************************************************
-    void TimestepTiming::Update(const uint64_t t, const double time)
+    void TimestepTiming::Update(const uint64_t t)
     {
         if (prev_t < t)
         {
@@ -35,9 +35,9 @@ namespace timing
     }
 
     // **********************************************************
-    double TimestepTiming::_Timesteps_per_Second(const uint64_t t, const double time)
+    double TimestepTiming::_Timesteps_per_Second(const uint64_t t)
     {
-        Update(t, time);
+        Update(t);
 
         if (nb_timesteps == 0 || std::abs(elapsed_time) < 1.0e-5)
             return 0.0;
@@ -48,7 +48,7 @@ namespace timing
     // **********************************************************
     double TimestepTiming::_Seconds_per_Timestep(const uint64_t t, const double time)
     {
-        return 1.0 / _Timesteps_per_Second(t, time);
+        return 1.0 / _Timesteps_per_Second(t);
     }
 
 } // namespace timing

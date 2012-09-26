@@ -204,15 +204,15 @@ namespace timing
             uint64_t prev_t, nb_timesteps;
             double prev_duration;
 
-            void    Update(const uint64_t t, const double time);
+            void    Update(const uint64_t t);
             double _Seconds_per_Timestep(const uint64_t t, const double time);
-            double _Timesteps_per_Second(const uint64_t t, const double time);
+            double _Timesteps_per_Second(const uint64_t t);
 
         public:
             TimestepTiming();
 #ifndef DISABLE_TIMING
             inline double Seconds_per_Timestep(const uint64_t t, const double time) { return _Seconds_per_Timestep(t, time); }
-            inline double Timesteps_per_Second(const uint64_t t, const double time) { return _Timesteps_per_Second(t, time); }
+            inline double Timesteps_per_Second(const uint64_t t, const double time) { return _Timesteps_per_Second(t); }
 #else // #ifndef DISABLE_TIMING
             inline double Seconds_per_Timestep(const uint64_t t, const double time) { /* Don't do anything */                }
             inline double Timesteps_per_Second(const uint64_t t, const double time) { /* Don't do anything */                }
