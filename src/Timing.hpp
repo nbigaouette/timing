@@ -183,16 +183,18 @@ namespace timing
             double first_time;
             double duration;
 
-            std::string _Get_ETA(const double time) const;
+            std::string _Get_ETA(const double time, const int width = 0, const char fill = ' ') const;
 
         public:
             void Init(const double _first_time, const double _duration);
 #ifndef DISABLE_TIMING
             Eta(const double _first_time, const double _duration)   { Init(_first_time, _duration); }
-            std::string Get_ETA(const double time) const            { return _Get_ETA(time);        }
+            std::string Get_ETA(const double time, const int width = 0, const char fill = ' ') const
+                                                                    { return _Get_ETA(time, width, fill); }
 #else // #ifndef DISABLE_TIMING
             Eta(const double _first_time, const double _duration)   { /* Don't init anything */     }
-            std::string Get_ETA(const double time) const            { return std::string("-");      }
+            std::string Get_ETA(const double time, const int width = 0, const char fill = ' ') const
+                                                                    { return std::string("-");      }
 #endif // #ifndef DISABLE_TIMING
     };
 

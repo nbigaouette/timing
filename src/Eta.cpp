@@ -30,7 +30,7 @@ namespace timing
     }
 
     // **********************************************************
-    std::string Eta::_Get_ETA(const double time) const
+    std::string Eta::_Get_ETA(const double time, const int width, const char fill) const
     {
         std::string eta_string("");
 
@@ -50,6 +50,12 @@ namespace timing
             tmp.Clear();
             tmp.Add_Seconds(eta);
             eta_string = tmp.Duration_Human_Readable();
+        }
+
+        // Format the string
+        if (width != 0)
+        {
+            eta_string.resize(width, fill);
         }
 
         return eta_string;
