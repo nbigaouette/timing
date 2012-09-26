@@ -68,8 +68,8 @@ namespace timing
     void Set_Timers_Step(const uint64_t _step);
 
     // **********************************************************
-    template <class Integer>
-    std::string IntToStr(const Integer integer, const int width = 0, const char fill = ' ')
+    template <class Number>
+    std::string NumberToStr(const Number integer, const int width = 0, const char fill = ' ')
     {
         std::ostringstream MyStream;
         if (width != 0)

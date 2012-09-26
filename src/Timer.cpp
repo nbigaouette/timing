@@ -283,12 +283,12 @@ namespace timing
 
         std::string duration_string;
         if (days != 0)
-            duration_string += timing::IntToStr(days) + std::string("d");
+            duration_string += timing::NumberToStr(days) + std::string("d");
         if (hours != 0 or days != 0)
-            duration_string += timing::IntToStr(hours,2,'0') + std::string("h");
+            duration_string += timing::NumberToStr(hours,2,'0') + std::string("h");
         if (minutes != 0 or hours != 0 or days != 0)
-            duration_string += timing::IntToStr(minutes,2,'0') + std::string("m");
-        duration_string += timing::IntToStr(seconds,2,'0') + std::string("s");
+            duration_string += timing::NumberToStr(minutes,2,'0') + std::string("m");
+        duration_string += timing::NumberToStr(seconds,2,'0') + std::string("s");
 
         return duration_string;
     }
