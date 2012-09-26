@@ -46,7 +46,7 @@ namespace timing
     }
 
     // **********************************************************
-    double TimestepTiming::_Seconds_per_Timestep(const uint64_t t, const double time)
+    double TimestepTiming::_Seconds_per_Timestep(const uint64_t t)
     {
         return 1.0 / _Timesteps_per_Second(t);
     }
