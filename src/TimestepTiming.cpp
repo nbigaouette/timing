@@ -51,6 +51,17 @@ namespace timing
         return 1.0 / _Timesteps_per_Second(t);
     }
 
+    // **********************************************************
+    std::string TimestepTiming::_Timesteps_per_Second_String(const uint64_t t,
+                                                             const int width,
+                                                             const char fill)
+    {
+        // "tps" == timestep per second
+        std::string tps_string("-");
+        const double tps = _Timesteps_per_Second(t);
+        return timing::NumberToStr(tps, width, fill);
+    }
+
 } // namespace timing
 
 // ********** End of file ***************************************

@@ -208,6 +208,7 @@ namespace timing
             void    Update(const uint64_t t);
             double _Seconds_per_Timestep(const uint64_t t);
             double _Timesteps_per_Second(const uint64_t t);
+            std::string _Timesteps_per_Second_String(const uint64_t t, const int width = 0, const char fill = ' ');
 
         public:
             TimestepTiming();
@@ -216,11 +217,15 @@ namespace timing
             inline double Seconds_per_Timestep(const uint64_t t)                    { return _Seconds_per_Timestep(t); }
             inline double Timesteps_per_Second(const uint64_t t, const double time) { return _Timesteps_per_Second(t); }
             inline double Timesteps_per_Second(const uint64_t t)                    { return _Timesteps_per_Second(t); }
+            inline std::string Timesteps_per_Second_String(const uint64_t t, const int width = 0, const char fill = ' ')
+                                                                                    { return _Timesteps_per_Second_String(t, width, fill); }
 #else // #ifndef DISABLE_TIMING
             inline double Seconds_per_Timestep(const uint64_t t, const double time) { /* Don't do anything */                }
             inline double Seconds_per_Timestep(const uint64_t t)                    { /* Don't do anything */                }
             inline double Timesteps_per_Second(const uint64_t t, const double time) { /* Don't do anything */                }
             inline double Timesteps_per_Second(const uint64_t t)                    { /* Don't do anything */                }
+            inline std::string Timesteps_per_Second_String(const uint64_t t, const int width = 0, const char fill = ' ')
+                                                                                    { return std::string("") }
 #endif // #ifndef DISABLE_TIMING
     };
 
