@@ -74,8 +74,6 @@ namespace timing
         std::ostringstream MyStream;
         if (width != 0)
         {
-            //MyStream << std::setw(width);
-            //MyStream << std::setfill(fill);
             MyStream.width(width);
             MyStream.fill(fill);
         }
