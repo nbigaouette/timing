@@ -75,6 +75,9 @@ namespace timing
         if (width != 0)
         {
             MyStream.width(width);
+        }
+        if (fill != ' ')
+        {
             MyStream.fill(fill);
         }
         MyStream << integer << std::flush;
