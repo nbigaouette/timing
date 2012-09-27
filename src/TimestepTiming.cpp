@@ -62,6 +62,17 @@ namespace timing
         return timing::NumberToStr(tps, width, fill);
     }
 
+    // **********************************************************
+    std::string TimestepTiming::_Total_Timesteps_per_Second_String(const uint64_t tmax,
+                                                                   const int width,
+                                                                   const char fill)
+    {
+        // "tps" == timestep per second
+        std::string tps_string("-");
+        const double tps = double(tmax) / TimerTotal.Get_Duration_Seconds();
+        return timing::NumberToStr(tps, width, fill);
+    }
+
 } // namespace timing
 
 // ********** End of file ***************************************
