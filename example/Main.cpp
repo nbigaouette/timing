@@ -77,13 +77,16 @@ int main(int argc, char *argv[])
     TIMER_STOP("Wait", Timing_Wait);
 
     // Test the time steps per second
+    std::cout << "\nTesting the Timesteps_per_Second() function.\n";
+    const double wait_s = 1.5;
+    std::cout << "Each loop iteration take " << wait_s << " seconds to perform.\n";
+    std::cout << "The \"timestep/second\" value should be close to that.\n";
+    std::cout << "(It could take two or three time steps to stabilize)\n";
     for (int t = 0 ; t < 10 ; t++)
     {
         // Each iteration should state 1.5 seconds
-        timing::Wait(1.5);
-        std::cout << "ETA: " << ETA.Get_ETA(double(t)) << "   ";
-        std::cout << "timestep/second = " << timestep_timing.Timesteps_per_Second(t);
-        std::cout << "\n";
+        timing::Wait(wait_s);
+        std::cout << "timestep/second = " << timestep_timing.Timesteps_per_Second(t) << "\n";
     }
 
     timing::Print(max_t);
