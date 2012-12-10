@@ -60,6 +60,12 @@ namespace timing
     }
 
     // **********************************************************
+    std::string Duration_Human_Readable()
+    {
+        return TimerTotal.Duration_Human_Readable().c_str();
+    }
+
+    // **********************************************************
     double Get_Total_Duration()
     {
         return TimerTotal.Get_Duration();

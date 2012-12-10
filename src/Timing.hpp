@@ -62,6 +62,7 @@ namespace timing
     inline void Print(const uint64_t nt, const size_t terminal_width = 1) { /* Don't do anything */       }
 #endif // #ifndef DISABLE_TIMING
 
+    std::string Duration_Human_Readable();
     double Get_Total_Duration();
     void Stop_All_Timers();
     void Enable_Timers_Output(const std::string &_output_folder);
